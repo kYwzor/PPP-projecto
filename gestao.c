@@ -253,10 +253,8 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
 
     while(aux_v->destino != lista_viagens->viagem->destino && aux_v->partida != lista_viagens->viagem->partida && lista_viagens->next!=NULL)
             lista_viagens=lista_viagens->next;
-    while(aux_u->nome != lista_utilizadores->utilizador->nome && aux_u->cc != lista_utilizadores->utilizador->cc && lista_utilizadores->next!=NULL){
+    while(aux_u->nome != lista_utilizadores->utilizador->nome && aux_u->cc != lista_utilizadores->utilizador->cc && lista_utilizadores->next!=NULL)
             lista_utilizadores=lista_utilizadores->next;
-    }
-    printf("cheguei aqui");
     node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
     node_u->utilizador=lista_utilizadores->utilizador;
     node_u->next=NULL;

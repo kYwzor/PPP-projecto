@@ -8,7 +8,7 @@ typedef struct data{
 
 typedef struct utilizador{
     char *nome;
-    int CC;
+    int cc;
 }Utilizador;
 
 typedef struct viagem{

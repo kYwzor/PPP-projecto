@@ -10,8 +10,8 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
 
     do{
         printf("[ADMIN -> 0] Registar uma viagem\n");
-        printf("[ADMIN -> 1] Registar uma viagem\n");
-        printf("[2] Registar pedido de um cliente\n");
+        printf("[ADMIN -> 1] Registar um utilizador\n");
+        printf("[2] Registar pedido de um utilizador\n");
         printf("[9] Sair do programa\n");
 
         scanf("%d",&opcao);
@@ -28,7 +28,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 2:
-                /*compra_viagem();*/
+                compra_viagem(lista_principal_utilizadores, lista_principal_viagens);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 9:
@@ -42,6 +42,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
             printf("Prima Enter para voltar ao menu.");
             getchar();
         }
+        system("cls");
     }while(opcao!=9);
 }
 

@@ -7,69 +7,83 @@
 
 int compara_datas(Data *d1, Data *d2){
     int a, b;
-    a=(d1->ano)*10000000000+(d1->mes)*100000000+(d1->dia)*1000000+(d1->hora)*10000+(d1->min)*100+(d1->seg);
-    b=(d2->ano)*10000000000+(d2->mes)*100000000+(d2->dia)*1000000+(d2->hora)*10000+(d2->min)*100+(d2->seg);
+    a=(d1->ano)*100000000+(d1->mes)*1000000+(d1->dia)*10000+(d1->hora)*100+(d1->min);
+    b=(d2->ano)*100000000+(d2->mes)*1000000+(d2->dia)*10000+(d2->hora)*100+(d2->min);
     if (a>b) return 1;
     else if (a<b) return -1;
     else return 0;
 }
 
 void imprime_viagem(Viagem *viagem){
-    printf("%s\t Dia %d do %d de %d √†s %d hora e %d minutos.\n",viagem->destino, (viagem->partida)->dia, (viagem->partida)->mes,(viagem->partida)->ano, (viagem->partida)->hora, (viagem->partida)->min);
+    printf("%s\t Dia %d do %d de %d ‡s %d hora e %d minutos.\n",viagem->destino, (viagem->partida)->dia, (viagem->partida)->mes,(viagem->partida)->ano, (viagem->partida)->hora, (viagem->partida)->min);
 }
 
 void imprime_utilizador(Utilizador *utilizador){
-    printf("Nome: %s\t\t\tN√∫mero de CC: %d\n", utilizador->nome, utilizador->cc);
+    printf("Nome: %s\t\t\tN˙mero de CC: %d\n", utilizador->nome, utilizador->cc);
 }
 
 int verifica_data(int dia, int mes, int ano){
-   	if ((dia >= 1 && dia <= 31) && (mes >= 1 && mes <= 12)){
-            if ((dia == 29 && mes == 2) && ((ano % 400 == 0) || (ano % 4 == 0) && (ano % 100 != 0))) {
-                return 1;
+   	if ((dia >= 1) && (mes >= 1 && mes <= 12) && ano>=0){
+            if (mes==2){
+                if (dia<=28)
+                    return 1;
+                else if (((ano % 400 == 0) || ((ano % 4 == 0) && (ano % 100 != 0))) && dia==29)
+                    return 1;
+                else
+                    return 0;
             }
-            if (dia <= 28 && mes == 2){
+            else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia <= 30))
                 return 1;
-            }
-            if ((dia <= 30) && (mes == 4 || mes == 6 || mes == 9 || mes == 11)) {
+            else if ((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes ==8 || mes == 10 || mes == 12)&&(dia <=31) )
                 return 1;
-            }
-            if ((dia <=31) && (mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes ==8 || mes == 10 || mes == 12)) {
-                return 1;
-            }
-            else{
+            else
                 return 0;
-            }
-      }
-       else{
-                return 0;
-           }
+    }
+    else
+        return 0;
 }
 
-void regista_viagem(Lista_viagens lista_principal){
-    Viagem* viagem;
+void regista_viagem_manual(Lista_viagens lista_principal){
     char* destino;
     int vagas, aux;
     Data* data_partida;
-    viagem=(Viagem*) malloc(sizeof(Viagem));
-    data_partida=(Data*) malloc(sizeof(Data));
-    data_partida->seg=0;
 
     destino=(char*) malloc(MAX_STRING*sizeof(char));
+    data_partida=(Data*) malloc(sizeof(Data));
 
-    printf("Destino da nova viagem: ");  gets(destino);
-    printf("N√∫mero de vagas da nova viagem: "); scanf("%d", &vagas);
+    printf("Destino da nova viagem: ");
+    gets(destino);
+
+    printf("N˙mero de vagas da nova viagem: ");
+    scanf("%d", &vagas);
+    getchar();
+
     do{
-        printf("Data de partida [dia / mes / ano]: "); scanf("%d %d %d", &(data_partida->dia), &(data_partida->mes), &(data_partida->ano));
-        if(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano)==0) printf("Data inv√°lida. Introduza a data novamente!");
-    }while(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano==0));
+        printf("Data de partida [dia / mes / ano]: ");
+        scanf("%d %d %d", &(data_partida->dia), &(data_partida->mes), &(data_partida->ano));
+        if(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano)==0)
+            printf("Data inv·lida. Introduza a data novamente!\n");
+    }while(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano)==0);
 
     do{
         aux=0;
-        printf("Hora da partida [hora / min]: "); scanf("%d %d", &(data_partida->hora), &(data_partida->min));
-        if(data_partida->hora>0 && data_partida->hora<24 && data_partida->min>0 && data_partida->min<60){ aux=1; printf("Hora inv√°lida. Introduza a hora novamente!");
-    while(aux==1)
-        getchar();
+        printf("Hora da partida [hora / min]: ");
+        scanf("%d %d", &(data_partida->hora), &(data_partida->min));
+        if(data_partida->hora<0 && data_partida->hora>23 && data_partida->min<0 && data_partida->min>59){
+            aux=1;
+            printf("Hora inv·lida. Introduza a hora novamente!\n");
+        }
+    }while(aux==1);
 
+    regista_viagem(lista_principal, destino, data_partida, vagas);
+    printf("Viagem inserida com sucesso!\n");
+    getchar();
+}
+
+void regista_viagem(Lista_viagens lista_principal, char* destino, Data* data_partida, int vagas){
+    Viagem* viagem;
+
+    viagem=(Viagem*)malloc(sizeof(Viagem));
 
     viagem->destino=destino;
     viagem->partida=data_partida;
@@ -85,7 +99,7 @@ void procura_lista_principal_viagens (Lista_viagens lista, Data *chave, Lista_vi
         *actual = (*actual)->next;
     }
     if ((*actual) != NULL && compara_datas(((*actual)->viagem)->partida,chave)!=0)
-        *actual = NULL; /* Se elemento n√£o encontrado*/
+        *actual = NULL; /* Se elemento n„o encontrado*/
 }
 
 void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
@@ -102,7 +116,6 @@ void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
         procura_lista_principal_viagens(lista, viagem->partida, &ant, &inutil);
         no->next = ant->next;
         ant->next = no;
-        printf("Viagem inserida com sucesso!\n");
     }
 }
 
@@ -125,7 +138,7 @@ char* devolve_nome(){
             i++;
         }
         if(nome[0] == ' ' || nome[0] == '\0' || nome[strlen(nome)-1] == ' ' || contador != i){
-            printf("Nome inv√°lido. Insira de novo:\n");
+            printf("Nome inv·lido. Insira de novo:\n");
             invalido=1;
         }
     }while(invalido==1);
@@ -139,7 +152,7 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
     Lista_utilizadores aux_l;
     aux_l=lista_utilizadores;
     do{
-        printf("Insira o n√∫mero de cart√£o de cidad√£o do cliente (8 d√≠gitos): ");
+        printf("Insira o n˙mero de cart„o de cidad„o do cliente (8 dÌgitos): ");
         gets(cc);
         retira_enter(cc);
 
@@ -158,7 +171,7 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
 
         if (strlen(cc)!=8 || aux != 8 || j==1){
             aux_l=lista_utilizadores;
-            printf("N√∫mero de Cart√£o de Cidad√£o inv√°lido.\n");
+            printf("N˙mero de Cart„o de Cidad„o inv·lido.\n");
         }
     }while(strlen(cc)!=8 || aux != 8 || j==1);
 
@@ -220,12 +233,12 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
     }
     do{
         invalido=0;
-        printf("Escolha a op√ß√£o: ");
+        printf("Escolha a opÁ„o: ");
         scanf("%d",&opcao);
         getchar();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Op√ß√£o inv√°lida. Escolha outra vez.");
+            printf("OpÁ„o inv·lida. Escolha outra vez.");
         }
     }while(invalido==1);
 
@@ -258,12 +271,12 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     }
     do{
         invalido=0;
-        printf("Escolha a op√ß√£o: ");
+        printf("Escolha a opÁ„o: ");
         scanf("%d",&opcao);
         getchar();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Op√ß√£o inv√°lida.");
+            printf("OpÁ„o inv·lida.");
         }
     }while(invalido==1);
 
@@ -274,57 +287,72 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     return aux->utilizador;
 }
 
+
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
+    Lista_utilizadores node_u, lut_aux;
+    Lista_viagens node_v, lvgm_aux, percorre_vgm;
     Utilizador *aux_u;
     Viagem *aux_v;
-    Lista_utilizadores node_u;
-    Lista_viagens node_v;
 
     aux_u=escolhe_utilizador(lista_utilizadores);
     aux_v=escolhe_viagem(lista_viagens);
 
-    lista_viagens=lista_viagens->next;
-    lista_utilizadores=lista_utilizadores->next;
+    lut_aux=lista_utilizadores->next;
+    lvgm_aux=lista_viagens->next;
 
-    while(aux_v->destino != lista_viagens->viagem->destino && aux_v->partida != lista_viagens->viagem->partida && lista_viagens->next!=NULL)
-            lista_viagens=lista_viagens->next;
-    while(aux_u->nome != lista_utilizadores->utilizador->nome && aux_u->cc != lista_utilizadores->utilizador->cc && lista_utilizadores->next!=NULL)
-            lista_utilizadores=lista_utilizadores->next;
+    while(aux_u->nome != lut_aux->utilizador->nome && aux_u->cc != lut_aux->utilizador->cc && lut_aux->next!=NULL)
+            lut_aux=lut_aux->next;
+    while(aux_v->destino != lvgm_aux->viagem->destino && aux_v->partida != lvgm_aux->viagem->partida && lvgm_aux->next!=NULL)
+            lvgm_aux=lvgm_aux->next;
+
+    /*
+    while ()
+        percorre_vgm=lut_aux->vgm_registado;
+        if(percorre_vgm>viagem==aux_v)
+            break;
+        else if(percorre_vgm->next!=NULL)
+            percorre_vgm=percorre_vgm->next;
+
+    funcao inacabada, objectivo: check se ja existe viagem na lista de reservados ou em espera*/
+
+
     node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
-    node_u->utilizador=lista_utilizadores->utilizador;
+    node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
+
+    node_u->utilizador=lut_aux->utilizador;
     node_u->next=NULL;
     node_u->vgm_espera=NULL;
     node_u->vgm_registado=NULL;
 
-    node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
-    node_v->viagem=lista_viagens->viagem;
+    node_v->viagem=lvgm_aux->viagem;
     node_v->next=NULL;
     node_v->ut_espera=NULL;
     node_v->ut_registado=NULL;
 
-    if(lista_viagens->viagem->vagas > 0){
-            while(lista_viagens->ut_registado->next != NULL){
-                lista_viagens->ut_registado=lista_viagens->ut_registado->next;}
+    if(lvgm_aux->viagem->vagas > 0){
+            while(lvgm_aux->ut_registado->next != NULL){
+                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;}
 
-            lista_viagens->ut_registado->next=node_u;
+            lvgm_aux->ut_registado->next=node_u;
 
-            while(lista_viagens->ut_registado->next != NULL){ 
-                lista_viagens->ut_registado=lista_viagens->ut_registado->next;}
+            while(lut_aux->vgm_registado->next != NULL){
+                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;}
 
-            lista_utilizadores->vgm_registado->next=node_v;
+            lut_aux->vgm_registado->next=node_v;
 
     }
     else{
-            while(lista_viagens->ut_espera->next != NULL){
-                lista_viagens->ut_espera=lista_viagens->ut_espera->next;}
+            while(lvgm_aux->ut_espera->next != NULL){
+                lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;}
 
-            lista_viagens->ut_espera->next=node_u;
+            lvgm_aux->ut_espera->next=node_u;
 
-            while(lista_viagens->ut_espera->next != NULL){
-                lista_viagens->ut_espera=lista_viagens->ut_espera->next;}
+            while(lut_aux->vgm_espera->next != NULL){
+                lut_aux->vgm_espera=lut_aux->vgm_espera->next;}
 
-            lista_utilizadores->vgm_espera->next=node_v;
+            lut_aux->vgm_espera->next=node_v;
     }
 
-    lista_viagens->viagem->vagas=(lista_viagens->viagem->vagas)-1;
+    lvgm_aux->viagem->vagas=(lvgm_aux->viagem->vagas)-1;
 }
+

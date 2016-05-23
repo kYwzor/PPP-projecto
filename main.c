@@ -20,7 +20,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
         system("cls");
         switch(opcao){
             case 0:
-                regista_viagem(lista_principal_viagens);
+                regista_viagem_manual(lista_principal_viagens);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 1:
@@ -28,7 +28,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 2:
-                compra_viagem(lista_principal_utilizadores, lista_principal_viagens);
+                compra_viagem_manual(lista_principal_utilizadores, lista_principal_viagens);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 9:

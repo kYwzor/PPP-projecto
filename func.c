@@ -12,10 +12,10 @@ Lista_viagens cria_lista_viagens(){
         aux->ut_registado = NULL;
         aux->ut_espera = NULL;
         aux->next = NULL;
-        return aux;
     }
     else
         printf("Erro na alocação de memória.");
+    return aux;
 }
 
 Lista_utilizadores cria_lista_utilizadores(){
@@ -28,10 +28,10 @@ Lista_utilizadores cria_lista_utilizadores(){
         aux->vgm_registado = NULL;
         aux->vgm_espera = NULL;
         aux->next = NULL;
-        return aux;
     }
     else
         printf("Erro na alocação de memória.");
+    return aux;
 }
 
 void retira_enter(char* nome){

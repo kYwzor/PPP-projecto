@@ -47,12 +47,12 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
 }
 
 int main(){
-    setlocale(LC_ALL, "");
     Lista_viagens lista_principal_viagens;
     Lista_utilizadores lista_principal_utilizadores;
     lista_principal_viagens = cria_lista_viagens();
     lista_principal_utilizadores = cria_lista_utilizadores();
 
+    setlocale(LC_ALL, "");
 
     /*verifica_ficheiros(); verifica que os ficheiros estão disponíveis e funcionais
     ficheiro_para_lista(lista_principal ,"listas.txt");*/

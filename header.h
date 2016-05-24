@@ -35,4 +35,3 @@ typedef struct lnode_vgm{
 }Lista_viagens_node;
 
 #endif // HEADER_H_INCLUDED
-

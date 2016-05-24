@@ -42,6 +42,79 @@ int verifica_data(int dia, int mes, int ano){
         return 0;
 }
 
+char* devolve_nome(){
+    char *nome;
+    int contador, i, invalido;
+
+    nome=(char*) malloc(MAX_STRING*sizeof(char));
+
+    do{
+        i=0;
+        contador=0;
+        invalido=0;
+        gets(nome);
+        retira_enter(nome);
+        while(nome[i] != '\0'){
+            if((nome[i]>='A' && nome[i]<='Z') || (nome[i]>='a' && nome[i]<='z') || nome[i] == ' ')
+                contador++;
+            i++;
+        }
+        if(nome[0] == ' ' || nome[0] == '\0' || nome[strlen(nome)-1] == ' ' || contador != i){
+            printf("Nome inválido. Insira de novo:\n");
+            invalido=1;
+        }
+    }while(invalido==1);
+
+    return nome;
+}
+
+int devolve_cc(Lista_utilizadores lista_utilizadores){
+    char cc[50];
+    int ncc, i, aux, j;
+    Lista_utilizadores aux_l;
+
+    do{
+        aux_l=lista_utilizadores;
+        printf("Insira o número de cartão de cidadão do cliente (8 dígitos): ");
+        gets(cc);
+        retira_enter(cc);
+
+        aux=0;
+        j=0;
+
+        for(i=0; cc[i] != '\0'; i++){
+            if(isdigit(cc[i]))
+                aux++;
+        }
+        while(aux_l->next!=NULL){
+            aux_l=aux_l->next;
+            if(aux_l->utilizador->cc==atoi(cc))
+                j=1;
+        }
+
+        if (strlen(cc)!=8 || aux != 8)
+            printf("Número de Cartão de Cidadão inválido.\n");
+        else if (j==1)
+            printf("Número de Cartão de Cidadão já existente.\n");
+    }while(strlen(cc)!=8 || aux != 8 || j==1);
+
+    /*passa de char para int*/
+
+    ncc = atoi(cc);
+    return ncc;
+}
+
+void regista_viagem(Lista_viagens lista_principal, char* destino, Data* data_partida, int vagas){
+    Viagem* viagem;
+
+    viagem=(Viagem*)malloc(sizeof(Viagem));
+
+    viagem->destino=destino;
+    viagem->partida=data_partida;
+    viagem->vagas=vagas;
+    insere_lista_principal_viagens(lista_principal, viagem);
+}
+
 void regista_viagem_manual(Lista_viagens lista_principal){
     char* destino;
     int vagas, aux;
@@ -51,7 +124,7 @@ void regista_viagem_manual(Lista_viagens lista_principal){
     data_partida=(Data*) malloc(sizeof(Data));
 
     printf("Destino da nova viagem: ");
-    gets(destino);
+    destino=devolve_nome();
 
     printf("Número de vagas da nova viagem: ");
     scanf("%d", &vagas);
@@ -77,17 +150,6 @@ void regista_viagem_manual(Lista_viagens lista_principal){
     regista_viagem(lista_principal, destino, data_partida, vagas);
     printf("Viagem inserida com sucesso!\n");
     getchar();
-}
-
-void regista_viagem(Lista_viagens lista_principal, char* destino, Data* data_partida, int vagas){
-    Viagem* viagem;
-
-    viagem=(Viagem*)malloc(sizeof(Viagem));
-
-    viagem->destino=destino;
-    viagem->partida=data_partida;
-    viagem->vagas=vagas;
-    insere_lista_principal_viagens(lista_principal, viagem);
 }
 
 void procura_lista_principal_viagens (Lista_viagens lista, Data *chave, Lista_viagens *ant, Lista_viagens *actual){
@@ -118,72 +180,11 @@ void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
     }
 }
 
-char* devolve_nome(){
-    char *nome;
-    int contador, i, invalido;
-
-    nome=(char*) malloc(MAX_STRING*sizeof(char));
-
-    printf("Insira o nome do cliente: ");
-    do{
-        i=0;
-        contador=0;
-        invalido=0;
-        gets(nome);
-        retira_enter(nome);
-        while(nome[i] != '\0'){
-            if((nome[i]>='A' && nome[i]<='Z') || (nome[i]>='a' && nome[i]<='z') || nome[i] == ' ')
-                contador++;
-            i++;
-        }
-        if(nome[0] == ' ' || nome[0] == '\0' || nome[strlen(nome)-1] == ' ' || contador != i){
-            printf("Nome inválido. Insira de novo:\n");
-            invalido=1;
-        }
-    }while(invalido==1);
-
-    return nome;
-}
-
-int devolve_cc(Lista_utilizadores lista_utilizadores){
-    char cc[50];
-    int ncc, i, aux, j;
-    Lista_utilizadores aux_l;
-    aux_l=lista_utilizadores;
-    do{
-        printf("Insira o número de cartão de cidadão do cliente (8 dígitos): ");
-        gets(cc);
-        retira_enter(cc);
-
-        aux=0;
-        j=0;
-
-        for(i=0; cc[i] != '\0'; i++){
-            if(isdigit(cc[i]))
-                aux++;
-        }
-        while(aux_l->next!=NULL){
-            aux_l=aux_l->next;
-            if(aux_l->utilizador->cc==atoi(cc))
-                j=1;
-        }
-
-        if (strlen(cc)!=8 || aux != 8 || j==1){
-            aux_l=lista_utilizadores;
-            printf("Número de Cartão de Cidadão inválido ou já existente.\n");
-        }
-    }while(strlen(cc)!=8 || aux != 8 || j==1);
-
-    /*passa de char para int*/
-
-    ncc = atoi(cc);
-    return ncc;
-}
-
 void regista_cliente(Lista_utilizadores lista_principal){
     char *nome;
     int cc;
     Utilizador *utilizador;
+    printf("Insira o nome do cliente: ");
     nome=devolve_nome();
     cc=devolve_cc(lista_principal);
     utilizador=(Utilizador*) malloc(sizeof(Utilizador));
@@ -212,9 +213,10 @@ void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Uti
 
 Viagem* escolhe_viagem(Lista_viagens lista_viagens){
     Lista_viagens aux;
-    aux=lista_viagens;
     int i=0, invalido;
     int opcao;
+
+    aux=lista_viagens;
     system("cls");
 
     if(aux->next==NULL){
@@ -237,7 +239,7 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
         getchar();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inválida. Escolha outra vez.");
+            printf("Opção inválida. Escolha outra vez.\n");
         }
     }while(invalido==1);
 
@@ -250,10 +252,11 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
 
 Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     Lista_utilizadores aux;
-    aux=lista_utilizadores;
     int i, invalido, opcao;
     i=0;
+
     system("cls");
+    aux=lista_utilizadores;
 
     if(aux->next==NULL){
         printf("Sem utilizadores disponiveis!\n");
@@ -275,7 +278,7 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
         getchar();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inválida.");
+            printf("Opção inválida. Escolha outra vez.\n");
         }
     }while(invalido==1);
 
@@ -302,6 +305,7 @@ int procura_viagem_de_utilizador(Lista_utilizadores node_ut, Viagem* aux_v){
         else
             return 0;
     }
+    return 2;
 }
 
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
@@ -361,21 +365,25 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
             printf("Compra bem sucedida. Cliente colocado na lista de reservas.\n");
         }
         else{
-                printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
-                scanf("%d", &opcao);
-                getchar();
-                if(opcao==1){
-                   while(lvgm_aux->ut_espera->next != NULL)
-                            lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;
+                do{
+                    printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
+                    scanf("%d", &opcao);
+                    getchar();
+                    if(opcao==1){
+                       while(lvgm_aux->ut_espera->next != NULL)
+                                lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;
 
-                        lvgm_aux->ut_espera->next=node_u;
+                            lvgm_aux->ut_espera->next=node_u;
 
-                        while(lut_aux->vgm_espera->next != NULL)
-                            lut_aux->vgm_espera=lut_aux->vgm_espera->next;
+                            while(lut_aux->vgm_espera->next != NULL)
+                                lut_aux->vgm_espera=lut_aux->vgm_espera->next;
 
-                        lut_aux->vgm_espera->next=node_v;
-                        printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
-                }
+                            lut_aux->vgm_espera->next=node_v;
+                            printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
+                    }
+                    else if(opcao!=2)
+                        printf("Opção inválida. Escolha de novo.\n");
+                }while((opcao!=1) && (opcao!=2));
                 return;
         }
     }

@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 #include <ctype.h>
 #include <string.h>
 #include "header.h"
@@ -287,12 +286,30 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     return aux->utilizador;
 }
 
+int procura_viagem_de_utilizador(Lista_utilizadores node_ut, Viagem* aux_v){
+    Lista_viagens percorre_vgm;
+    percorre_vgm=node_ut->vgm_registado;
+    while(percorre_vgm->viagem!=aux_v && percorre_vgm->next!=NULL)
+        percorre_vgm=percorre_vgm->next;
+    if(percorre_vgm->viagem==aux_v)
+        return 1;
+    else if(percorre_vgm->next==NULL){
+        percorre_vgm=node_ut->vgm_espera;
+        while(percorre_vgm->viagem!=aux_v && percorre_vgm->next!=NULL)
+            percorre_vgm=percorre_vgm->next;
+        if(percorre_vgm->viagem==aux_v)
+            return -1;
+        else
+            return 0;
+    }
+}
 
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
     Lista_utilizadores node_u, lut_aux;
-    Lista_viagens node_v, lvgm_aux, percorre_vgm;
+    Lista_viagens node_v, lvgm_aux;
     Utilizador *aux_u;
     Viagem *aux_v;
+    int aux_int, opcao;
 
     aux_u=escolhe_utilizador(lista_utilizadores);
     aux_v=escolhe_viagem(lista_viagens);
@@ -304,17 +321,6 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
             lut_aux=lut_aux->next;
     while(aux_v->destino != lvgm_aux->viagem->destino && aux_v->partida != lvgm_aux->viagem->partida && lvgm_aux->next!=NULL)
             lvgm_aux=lvgm_aux->next;
-
-    /*
-    while ()
-        percorre_vgm=lut_aux->vgm_registado;
-        if(percorre_vgm>viagem==aux_v)
-            break;
-        else if(percorre_vgm->next!=NULL)
-            percorre_vgm=percorre_vgm->next;
-
-    funcao inacabada, objectivo: check se ja existe viagem na lista de reservados ou em espera*/
-
 
     node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
     node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
@@ -329,30 +335,57 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
     node_v->ut_espera=NULL;
     node_v->ut_registado=NULL;
 
-    if(lvgm_aux->viagem->vagas > 0){
-            while(lvgm_aux->ut_registado->next != NULL){
-                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;}
+    aux_int=procura_viagem_de_utilizador(lut_aux, aux_v);
+    if(aux_int==1){
+        printf("Utilizador já comprou a viagem [lista de reservas]\n");
+        return;
+    }
+    else if (aux_int==-1){
+        printf("Utilizador já comprou a viagem [lista de espera]\n");
+        return;
+    }
+    else if (aux_int==0){
+        if(lvgm_aux->viagem->vagas > 0){
+            while(lvgm_aux->ut_registado->next != NULL)
+                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;
 
             lvgm_aux->ut_registado->next=node_u;
 
-            while(lut_aux->vgm_registado->next != NULL){
-                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;}
+            while(lut_aux->vgm_registado->next != NULL)
+                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;
 
             lut_aux->vgm_registado->next=node_v;
+            lvgm_aux->viagem->vagas=(lvgm_aux->viagem->vagas)-1;
+            printf("Compra bem sucedida. Cliente colocado na lista de reservas.\n");
+        }
+        else{
+            do{
+                printf("Não existem vagas disponíveis:\n");
+                printf("[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
+                scanf("%d", opcao);
+                getchar();
+                switch(opcao){
+                    case 1:
+                        while(lvgm_aux->ut_espera->next != NULL)
+                            lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;
 
+                        lvgm_aux->ut_espera->next=node_u;
+
+                        while(lut_aux->vgm_espera->next != NULL)
+                            lut_aux->vgm_espera=lut_aux->vgm_espera->next;
+
+                        lut_aux->vgm_espera->next=node_v;
+                        printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
+                        break;
+                    case 2:
+                        break;
+                    default:
+                        printf("Introduza uma opção válida");
+                        break;
+                }
+            }while(opcao!=1 || opcao!=2);
+            return;
+        }
     }
-    else{
-            while(lvgm_aux->ut_espera->next != NULL){
-                lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;}
-
-            lvgm_aux->ut_espera->next=node_u;
-
-            while(lut_aux->vgm_espera->next != NULL){
-                lut_aux->vgm_espera=lut_aux->vgm_espera->next;}
-
-            lut_aux->vgm_espera->next=node_v;
-    }
-
-    lvgm_aux->viagem->vagas=(lvgm_aux->viagem->vagas)-1;
 }
 

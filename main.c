@@ -6,44 +6,54 @@
 void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
 	int opcao = 0;
 
-    verifica_ficheiros(); /*verifica que os ficheiros est„o disponÌveis e funcionais*/
+    verifica_ficheiros(); /*verifica que os ficheiros est√£o dispon√≠veis e funcionais*/
 
     do{
-        printf("[ADMIN -> 0] Registar uma viagem\n");
-        printf("[ADMIN -> 1] Registar um utilizador\n");
-        printf("[2] Registar pedido de um utilizador\n");
-        printf("[9] Sair do programa\n");
+        printf("[1] Registar uma viagem\n");
+        printf("[2] Registar um utilizador\n");
+        printf("[3] Compra viagem para o utilizador\n");
+        printf("[4] Cancelar viagem de um utilizador\n");
+        printf("[5] Listar utilizadores para um destino\n");
+        printf("[6] Listar viagens de um utilizador\n");
+        printf("[7] Listar todos os utilizadores com viagens compradas\n");
+        printf("[8] Sair do programa\n");
 
         scanf("%d",&opcao);
         getchar();
 
         system("cls");
         switch(opcao){
-            case 0:
+            case 1:
                 regista_viagem_manual(lista_principal_viagens);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
-            case 1:
+            case 2:
                 regista_cliente(lista_principal_utilizadores);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
-            case 2:
+            case 3:
                 compra_viagem(lista_principal_utilizadores, lista_principal_viagens);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
-            case 9:
+            case 4:
+            
+                break;
+            case 5:
+                
+                break;
+            case 8:
                 /*sai do programa... Free, etc.*/
                 break;
             default:
-                printf("Introduza uma opÁ„o v·lida!\n");
+                printf("Introduza uma op√ß√£o v√°lida!\n");
                 break;
         }
-        if(opcao!=9){
+        if(opcao!=8){
             printf("Prima Enter para voltar ao menu.");
             getchar();
         }
         system("cls");
-    }while(opcao!=9);
+    }while(opcao!=8);
 }
 
 int main(){
@@ -52,9 +62,9 @@ int main(){
     lista_principal_viagens = cria_lista_viagens();
     lista_principal_utilizadores = cria_lista_utilizadores();
 
-    setlocale(LC_ALL, "");
+    setlocale(LC_ALL, "Portuguese");
 
-    /*verifica_ficheiros(); verifica que os ficheiros est„o disponÌveis e funcionais
+    /*verifica_ficheiros(); verifica que os ficheiros est√£o dispon√≠veis e funcionais
     ficheiro_para_lista(lista_principal ,"listas.txt");*/
 
     menu(lista_principal_viagens, lista_principal_utilizadores);

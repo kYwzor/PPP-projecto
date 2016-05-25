@@ -6,20 +6,20 @@
 void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
 	int opcao = 0;
 
-    verifica_ficheiros(); /*verifica que os ficheiros est√£o dispon√≠veis e funcionais*/
+    verifica_ficheiros(); /*verifica que os ficheiros est„o disponÌveis e funcionais*/
 
     do{
+        printf(" _____ _____ _____ _____ \n|     |   __|   | |  |  |\n| | | |   __| | | |  |  |\n|_|_|_|_____|_|___|_____|\n___________________________\n\n");
         printf("[1] Registar uma viagem\n");
         printf("[2] Registar um utilizador\n");
         printf("[3] Compra viagem para o utilizador\n");
         printf("[4] Cancelar viagem de um utilizador\n");
-        printf("[5] Listar utilizadores para um destino\n");
+        printf("[5] Listar viagens para um destino\n");
         printf("[6] Listar viagens de um utilizador\n");
         printf("[7] Listar todos os utilizadores com viagens compradas\n");
-        printf("[8] Sair do programa\n");
+        printf("[8] Sair do programa\n\n");
 
-        scanf("%d",&opcao);
-        getchar();
+        opcao=devolve_inteiro();
 
         system("cls");
         switch(opcao){
@@ -36,16 +36,16 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 4:
-            
+
                 break;
             case 5:
-                
+                viagens_destino(lista_principal_viagens);
                 break;
             case 8:
                 /*sai do programa... Free, etc.*/
                 break;
             default:
-                printf("Introduza uma op√ß√£o v√°lida!\n");
+                printf("Introduza uma opÁ„o v·lida!\n");
                 break;
         }
         if(opcao!=8){
@@ -64,7 +64,7 @@ int main(){
 
     setlocale(LC_ALL, "Portuguese");
 
-    /*verifica_ficheiros(); verifica que os ficheiros est√£o dispon√≠veis e funcionais
+    /*verifica_ficheiros(); verifica que os ficheiros est„o disponÌveis e funcionais
     ficheiro_para_lista(lista_principal ,"listas.txt");*/
 
     menu(lista_principal_viagens, lista_principal_utilizadores);

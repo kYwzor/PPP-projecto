@@ -10,3 +10,5 @@ void verifica_ficheiros(){
     	fclose(f1);
 	}
 }
+
+

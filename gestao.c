@@ -106,30 +106,27 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
 }
 
 int devolve_inteiro(){
-    char vagas[50];
-    int vagas_n, i, aux, j;
+    char numero[MAX_STRING];
+    int i, aux;
 
     do{
-        gets(vagas);
-        retira_enter(vagas);
+        gets(numero);
+        retira_enter(numero);
 
         aux=0;
-        j=0;
 
-        for(i=0; vagas[i] != '\0'; i++){
-            j++;
-            if(isdigit(vagas[i]))
+        for(i=0; numero[i] != '\0'; i++){
+            if(isdigit(numero[i]))
                 aux++;
         }
-        if (aux != j || j==0)
+        if (aux != i || i==0)
             printf("Número introduzido inválido. Introduza de novo: ");
 
-    }while(aux != j || j==0);
+    }while(aux != i || i==0);
 
     /*passa de char para int*/
 
-    vagas_n = atoi(vagas);
-    return vagas_n;
+    return atoi(numero);
 }
 
 void procura_lista_principal_viagens (Lista_viagens lista, Data *chave, Lista_viagens *ant, Lista_viagens *actual){
@@ -262,8 +259,7 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
     do{
         invalido=0;
         printf("Escolha a opção: ");
-        scanf("%d",&opcao);
-        getchar();
+        opcao=devolve_inteiro();
         if(opcao<1 || opcao>i){
             invalido=1;
             printf("Opção inválida. Escolha outra vez.\n");
@@ -417,24 +413,25 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
 }
 
 void viagens_destino(Lista_viagens lista_principal_viagens){
-    char aux_v[MAX_STRING];
-    int i=0;
+    char destino[MAX_STRING];
+    int found;
     if(lista_principal_viagens->next==NULL){
         printf("Não existem viagens.\n");
         return;
     }
-    printf("Imprima o destino que deseja: ");
-    gets(aux_v);
-    retira_enter(aux_v);
+    printf("Introduza o destino que deseja: ");
+    destino=devolve_nome()
 
+    found=0;
     while(lista_principal_viagens->next!=NULL){
         lista_principal_viagens=lista_principal_viagens->next;
-        if(strcmp(lista_principal_viagens->viagem->destino, aux_v)==0){
-            i++;
+        if(strcmp(lista_principal_viagens->viagem->destino, destino)==0){
+            found=1;
             imprime_viagem(lista_principal_viagens->viagem);
         }
     }
-    if(i==0)
+    if(found==0)
         printf("Não existem viagens com este destino.\n");
 }
+
 

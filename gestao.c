@@ -173,7 +173,6 @@ void regista_viagem_manual(Lista_viagens lista_principal){
     int vagas, aux;
     Data* data_partida;
 
-    destino=(char*) malloc(MAX_STRING*sizeof(char));
     data_partida=(Data*) malloc(sizeof(Data));
 
     printf("Destino da nova viagem: ");
@@ -413,14 +412,16 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
 }
 
 void viagens_destino(Lista_viagens lista_principal_viagens){
-    char destino[MAX_STRING];
+    char* destino;
     int found;
+
+    destino=(char*) malloc(MAX_STRING * sizeof(char));
     if(lista_principal_viagens->next==NULL){
         printf("Não existem viagens.\n");
         return;
     }
     printf("Introduza o destino que deseja: ");
-    destino=devolve_nome()
+    destino=devolve_nome();
 
     found=0;
     while(lista_principal_viagens->next!=NULL){
@@ -432,6 +433,8 @@ void viagens_destino(Lista_viagens lista_principal_viagens){
     }
     if(found==0)
         printf("Não existem viagens com este destino.\n");
+
+     free(destino);
 }
 
 

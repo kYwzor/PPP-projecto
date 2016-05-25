@@ -71,7 +71,7 @@ char* devolve_nome(){
 
 int devolve_cc(Lista_utilizadores lista_utilizadores){
     char cc[50];
-    int ncc, i, aux, j;
+    int i, aux, j;
     Lista_utilizadores aux_l;
 
     do{
@@ -81,28 +81,27 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
         retira_enter(cc);
 
         aux=0;
-        j=0;
-
         for(i=0; cc[i] != '\0'; i++){
             if(isdigit(cc[i]))
                 aux++;
         }
+
+        j=0;
         while(aux_l->next!=NULL){
             aux_l=aux_l->next;
             if(aux_l->utilizador->cc==atoi(cc))
                 j=1;
         }
-
-        if (strlen(cc)!=8 || aux != 8)
-            printf("Número de Cartão de Cidadão inválido.\n");
+        if (aux != strlen(cc))
+            printf("Número introduzido inválido.\n");
+        else if (strlen(cc)!=8)
+            printf("Número inserido não tem 8 dígitos.\n");
         else if (j==1)
             printf("Número de Cartão de Cidadão já existente.\n");
     }while(strlen(cc)!=8 || aux != 8 || j==1);
 
     /*passa de char para int*/
-
-    ncc = atoi(cc);
-    return ncc;
+    return atoi(cc);
 }
 
 int devolve_inteiro(){
@@ -183,16 +182,25 @@ void regista_viagem_manual(Lista_viagens lista_principal){
 
 
     do{
-        printf("Data de partida [dia / mes / ano]: ");
-        scanf("%d %d %d", &(data_partida->dia), &(data_partida->mes), &(data_partida->ano));
-        if(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano)==0)
+        printf("Data de partida\n");
+        printf("Ano:");
+        data_partida->ano=devolve_inteiro();
+        printf("Mês:");
+        data_partida->mes=devolve_inteiro();
+        printf("Dia:");
+        data_partida->dia=devolve_inteiro();
+        aux=verifica_data(data_partida->dia, data_partida->mes, data_partida->ano);
+        if(aux==0)
             printf("Data inválida. Introduza a data novamente!\n");
-    }while(verifica_data(data_partida->dia, data_partida->mes, data_partida->ano)==0);
+    }while(aux==0);
 
     do{
         aux=0;
-        printf("Hora da partida [hora / min]: ");
-        scanf("%d %d", &(data_partida->hora), &(data_partida->min));
+        printf("Horas da partida\n");
+        printf("Hora:");
+        data_partida->hora=devolve_inteiro();
+        printf("Minutos:");
+        data_partida->min=devolve_inteiro();
         if(data_partida->hora<0 || data_partida->hora>23 || data_partida->min<0 || data_partida->min>59){
             aux=1;
             printf("Hora inválida. Introduza a hora novamente!\n");
@@ -201,7 +209,6 @@ void regista_viagem_manual(Lista_viagens lista_principal){
 
     regista_viagem(lista_principal, destino, data_partida, vagas);
     printf("Viagem inserida com sucesso!\n");
-    getchar();
 }
 
 void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Utilizador *utilizador){
@@ -236,15 +243,15 @@ void regista_cliente(Lista_utilizadores lista_principal){
 
 Viagem* escolhe_viagem(Lista_viagens lista_viagens){
     Lista_viagens aux;
-    int i=0, invalido;
-    int opcao;
+    int i, invalido, opcao;
 
     aux=lista_viagens;
     system("cls");
 
+    i=0;
     if(aux->next==NULL){
-            printf("Sem viagens disponiveis!\n");
-            return NULL;
+        printf("Sem viagens disponiveis!\n");
+        return NULL;
     }
     else{
         printf("Escolha viagem:\n");
@@ -275,11 +282,11 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
 Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     Lista_utilizadores aux;
     int i, invalido, opcao;
-    i=0;
 
-    system("cls");
     aux=lista_utilizadores;
+    system("cls");
 
+    i=0;
     if(aux->next==NULL){
         printf("Sem utilizadores disponíveis!\n");
         return NULL;
@@ -338,9 +345,12 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
     int aux_int, opcao;
 
     aux_u=escolhe_utilizador(lista_utilizadores);
-    aux_v=escolhe_viagem(lista_viagens);
+    if(aux_u==NULL)
+        return;
 
-    if(aux_u==NULL || aux_v==NULL) return;
+    aux_v=escolhe_viagem(lista_viagens);
+    if(aux_v==NULL)
+        return;
 
     lut_aux=lista_utilizadores->next;
     lvgm_aux=lista_viagens->next;

@@ -290,7 +290,7 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
         opcao=devolve_inteiro();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inválida. Escolha outra vez.\n");
+            printf("Opção inexistente. Escolha outra vez.\n");
         }
     }while(invalido==1);
 
@@ -325,11 +325,10 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
     do{
         invalido=0;
         printf("Escolha a opção: ");
-        scanf("%d",&opcao);
-        getchar();
+        opcao=devolve_inteiro();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inválida. Escolha outra vez.\n");
+            printf("Opção inexistente. Escolha outra vez.\n");
         }
     }while(invalido==1);
 
@@ -415,10 +414,9 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
             printf("Compra bem sucedida. Cliente colocado na lista de reservas.\n");
         }
         else{
+            printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
             do{
-                printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
-                scanf("%d", &opcao);
-                getchar();
+                opcao=devolve_inteiro();
                 if(opcao==1){
                     lu_sec=lvgm_aux->ut_espera;
                     while(lu_sec->next != NULL)
@@ -432,7 +430,7 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
                     printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
                 }
                 else if(opcao!=2)
-                    printf("Opção inválida. Escolha de novo.\n");
+                    printf("Opção inexistente. Escolha de novo: ");
             }while((opcao!=1) && (opcao!=2));
             return;
         }

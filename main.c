@@ -50,7 +50,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
         }
         if(opcao!=8){
             printf("Prima Enter para voltar ao menu.");
-            getchar();
+            while(getchar()!='\n');
         }
         system("cls");
     }while(opcao!=8);

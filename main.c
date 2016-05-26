@@ -51,7 +51,6 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*sai do programa... Free, etc.*/
                 break;
             default:
-                printf("%d", opcao);
                 printf("Introduza uma opção válida!\n");
                 break;
         }

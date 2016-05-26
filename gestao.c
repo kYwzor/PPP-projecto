@@ -495,18 +495,15 @@ void todos_com_viagem(Lista_utilizadores lista_utilizadores){
     int flag;
 
     flag=0;
-    aux_u=lista_utilizadores;
-    aux_u=aux_u->next; /*salta o header*/
-
+    aux_u=lista_utilizadores->next;
 
     if(aux_u==NULL){
         printf("Não existe nenhum cliente na base de dados.\n");
         return;
     }
-    else{
-        lv_reg=aux_u->vgm_registado;
-        lv_esp=aux_u->vgm_espera;
-    }
+
+    lv_reg=aux_u->vgm_registado;
+    lv_esp=aux_u->vgm_espera;
 
     while(aux_u!=NULL){;
         if(lv_esp->next!=NULL || lv_reg->next!=NULL){

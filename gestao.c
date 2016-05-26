@@ -14,11 +14,11 @@ int compara_datas(Data *d1, Data *d2){
 }
 
 void imprime_viagem(Viagem *viagem){
-    printf("%s\t\t--\t\tDia %d do %d de %d às %d hora e %d minutos.\n",viagem->destino, (viagem->partida)->dia, (viagem->partida)->mes,(viagem->partida)->ano, (viagem->partida)->hora, (viagem->partida)->min);
+    printf("%s\t--\tDia %d do %d de %d às %d hora e %d minutos.\n",viagem->destino, (viagem->partida)->dia, (viagem->partida)->mes,(viagem->partida)->ano, (viagem->partida)->hora, (viagem->partida)->min);
 }
 
 void imprime_utilizador(Utilizador *utilizador){
-    printf("Nome: %s\t\t--\t\tNúmero de CC: %d\n", utilizador->nome, utilizador->cc);
+    printf("Nome: %s\t--\tNúmero de CC: %d\n", utilizador->nome, utilizador->cc);
 }
 
 int verifica_data(int dia, int mes, int ano){
@@ -488,3 +488,35 @@ void viagens_utilizador(Lista_utilizadores node_ut){
         imprime_viagem(lv_sec->viagem);
     }
 }
+
+void todos_com_viagem(Lista_utilizadores lista_utilizadores){
+    Lista_viagens lv_reg, lv_esp;
+    Lista_utilizadores aux_u;
+    int flag;
+
+    flag=0;
+    aux_u=lista_utilizadores;
+    aux_u=aux_u->next; /*salta o header*/
+
+
+    if(aux_u==NULL){
+        printf("Não existe nenhum cliente na base de dados.\n");
+        return;
+    }
+    else{
+        lv_reg=aux_u->vgm_registado;
+        lv_esp=aux_u->vgm_espera;
+    }
+
+    while(aux_u!=NULL){;
+        if(lv_esp->next!=NULL || lv_reg->next!=NULL){
+            imprime_utilizador(aux_u->utilizador);
+            flag=1;
+        }
+        aux_u=aux_u->next;
+    }
+
+    if(flag==0)
+        printf("Não existe nenhum cliente com viagens registadas.\n");
+}
+

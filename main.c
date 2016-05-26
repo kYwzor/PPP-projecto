@@ -44,10 +44,14 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
             case 6:
                 viagens_utilizador(lista_principal_utilizadores);
                 break;
+            case 7:
+                todos_com_viagem(lista_principal_utilizadores);
+                break;
             case 8:
                 /*sai do programa... Free, etc.*/
                 break;
             default:
+                printf("%d", opcao);
                 printf("Introduza uma opção válida!\n");
                 break;
         }

@@ -48,7 +48,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 todos_com_viagem(lista_principal_utilizadores);
                 break;
             case 8:
-                /*sai do programa... Free, etc.*/
+                return;
                 break;
             default:
                 printf("Introduza uma opção válida!\n");
@@ -74,5 +74,8 @@ int main(){
     ficheiro_para_lista(lista_principal ,"listas.txt");*/
 
     menu(lista_principal_viagens, lista_principal_utilizadores);
+    guarda_listas(lista_principal_viagens, lista_principal_utilizadores);
+
+
     return 0;
 }

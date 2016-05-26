@@ -41,6 +41,9 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
             case 5:
                 viagens_destino(lista_principal_viagens);
                 break;
+            case 6:
+                viagens_utilizador(lista_principal_utilizadores);
+                break;
             case 8:
                 /*sai do programa... Free, etc.*/
                 break;

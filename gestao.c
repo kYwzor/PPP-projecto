@@ -144,10 +144,21 @@ void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
     Lista_utilizadores reg,esp;
     Lista_viagens ant, inutil;
     no = (Lista_viagens) malloc(sizeof (Lista_viagens_node));
+
     reg = (Lista_utilizadores) malloc(sizeof(Lista_utilizadores_node));
-    esp = (Lista_utilizadores) malloc(sizeof(Lista_utilizadores_node));
+    reg->utilizador=NULL;
+    reg->vgm_espera=NULL;
+    reg->vgm_registado=NULL;
+    reg->next=NULL;
     no->ut_registado=reg;
+
+    esp = (Lista_utilizadores) malloc(sizeof(Lista_utilizadores_node));
+    esp->utilizador=NULL;
+    esp->vgm_espera=NULL;
+    esp->vgm_registado=NULL;
+    esp->next=NULL;
     no->ut_espera=esp;
+
     if (no != NULL) {
         no->viagem=viagem;
         procura_lista_principal_viagens(lista, viagem->partida, &ant, &inutil);
@@ -215,10 +226,21 @@ void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Uti
     Lista_utilizadores no;
     Lista_viagens reg, esp;
     no = (Lista_utilizadores) malloc (sizeof(Lista_utilizadores_node));
+
     reg = (Lista_viagens) malloc(sizeof(Lista_viagens_node));
-    esp = (Lista_viagens) malloc(sizeof(Lista_viagens_node));
+    reg->viagem=NULL;
+    reg->ut_espera=NULL;
+    reg->ut_registado=NULL;
+    reg->next=NULL;
     no->vgm_registado=reg;
+
+    esp = (Lista_viagens) malloc(sizeof(Lista_viagens_node));
+    esp->viagem=NULL;
+    esp->ut_espera=NULL;
+    esp->ut_registado=NULL;
+    esp->next=NULL;
     no->vgm_espera=esp;
+
     while(lista_principal->next!=NULL){
         lista_principal=lista_principal->next;
     }
@@ -325,21 +347,17 @@ int procura_viagem_de_utilizador(Lista_utilizadores node_ut, Viagem* aux_v){
         percorre_vgm=percorre_vgm->next;
     if(percorre_vgm->viagem==aux_v)
         return 1;
-    else if(percorre_vgm->next==NULL){
-        percorre_vgm=node_ut->vgm_espera;
-        while(percorre_vgm->viagem!=aux_v && percorre_vgm->next!=NULL)
-            percorre_vgm=percorre_vgm->next;
-        if(percorre_vgm->viagem==aux_v)
-            return -1;
-        else
-            return 0;
-    }
-    return 2;
+    percorre_vgm=node_ut->vgm_espera;
+    while(percorre_vgm->viagem!=aux_v && percorre_vgm->next!=NULL)
+        percorre_vgm=percorre_vgm->next;
+    if(percorre_vgm->viagem==aux_v)
+        return -1;
+    return 0;
 }
 
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
-    Lista_utilizadores node_u, lut_aux;
-    Lista_viagens node_v, lvgm_aux;
+    Lista_utilizadores node_u, lut_aux, lu_sec;
+    Lista_viagens node_v, lvgm_aux, lv_sec;
     Utilizador *aux_u;
     Viagem *aux_v;
     int aux_int, opcao;
@@ -355,23 +373,10 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
     lut_aux=lista_utilizadores->next;
     lvgm_aux=lista_viagens->next;
 
-    while(aux_u->nome != lut_aux->utilizador->nome && aux_u->cc != lut_aux->utilizador->cc && lut_aux->next!=NULL)
-            lut_aux=lut_aux->next;
-    while(aux_v->destino != lvgm_aux->viagem->destino && aux_v->partida != lvgm_aux->viagem->partida && lvgm_aux->next!=NULL)
-            lvgm_aux=lvgm_aux->next;
-
-    node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
-    node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
-
-    node_u->utilizador=lut_aux->utilizador;
-    node_u->next=NULL;
-    node_u->vgm_espera=NULL;
-    node_u->vgm_registado=NULL;
-
-    node_v->viagem=lvgm_aux->viagem;
-    node_v->next=NULL;
-    node_v->ut_espera=NULL;
-    node_v->ut_registado=NULL;
+    while(aux_u != lut_aux->utilizador && lut_aux->next!=NULL)
+        lut_aux=lut_aux->next;
+    while(aux_v != lvgm_aux->viagem && lvgm_aux->next!=NULL)
+        lvgm_aux=lvgm_aux->next;
 
     aux_int=procura_viagem_de_utilizador(lut_aux, aux_v);
     if(aux_int==1){
@@ -383,40 +388,53 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
         return;
     }
     else if (aux_int==0){
+        node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
+        node_u->utilizador=lut_aux->utilizador;
+        node_u->next=NULL;
+        node_u->vgm_espera=NULL;
+        node_u->vgm_registado=NULL;
+
+        node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
+        node_v->viagem=lvgm_aux->viagem;
+        node_v->next=NULL;
+        node_v->ut_espera=NULL;
+        node_v->ut_registado=NULL;
+
         if(lvgm_aux->viagem->vagas > 0){
-            while(lvgm_aux->ut_registado->next != NULL)
-                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;
+            lu_sec=lvgm_aux->ut_registado;
+            while(lu_sec->next != NULL)
+                lu_sec=lu_sec->next;
+            lu_sec->next=node_u;
 
-            lvgm_aux->ut_registado->next=node_u;
+            lv_sec=lut_aux->vgm_registado;
+            while(lv_sec->next != NULL)
+                lv_sec=lv_sec->next;
+            lv_sec->next=node_v;
 
-            while(lut_aux->vgm_registado->next != NULL)
-                lvgm_aux->ut_registado=lvgm_aux->ut_registado->next;
-
-            lut_aux->vgm_registado->next=node_v;
             lvgm_aux->viagem->vagas=(lvgm_aux->viagem->vagas)-1;
             printf("Compra bem sucedida. Cliente colocado na lista de reservas.\n");
         }
         else{
-                do{
-                    printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
-                    scanf("%d", &opcao);
-                    getchar();
-                    if(opcao==1){
-                       while(lvgm_aux->ut_espera->next != NULL)
-                                lvgm_aux->ut_espera=lvgm_aux->ut_espera->next;
+            do{
+                printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
+                scanf("%d", &opcao);
+                getchar();
+                if(opcao==1){
+                    lu_sec=lvgm_aux->ut_espera;
+                    while(lu_sec->next != NULL)
+                        lu_sec=lu_sec->next;
+                    lu_sec->next=node_u;
 
-                            lvgm_aux->ut_espera->next=node_u;
-
-                            while(lut_aux->vgm_espera->next != NULL)
-                                lut_aux->vgm_espera=lut_aux->vgm_espera->next;
-
-                            lut_aux->vgm_espera->next=node_v;
-                            printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
-                    }
-                    else if(opcao!=2)
-                        printf("Opção inválida. Escolha de novo.\n");
-                }while((opcao!=1) && (opcao!=2));
-                return;
+                    lv_sec=lut_aux->vgm_espera;
+                    while(lv_sec->next != NULL)
+                        lv_sec=lv_sec->next;
+                    lv_sec->next=node_v;
+                    printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
+                }
+                else if(opcao!=2)
+                    printf("Opção inválida. Escolha de novo.\n");
+            }while((opcao!=1) && (opcao!=2));
+            return;
         }
     }
 }
@@ -425,12 +443,12 @@ void viagens_destino(Lista_viagens lista_principal_viagens){
     char* destino;
     int found;
 
-    destino=(char*) malloc(MAX_STRING * sizeof(char));
     if(lista_principal_viagens->next==NULL){
         printf("Não existem viagens.\n");
         return;
     }
     printf("Introduza o destino que deseja: ");
+    destino=(char*) malloc(MAX_STRING * sizeof(char));
     destino=devolve_nome();
 
     found=0;
@@ -444,7 +462,7 @@ void viagens_destino(Lista_viagens lista_principal_viagens){
     if(found==0)
         printf("Não existem viagens com este destino.\n");
 
-     free(destino);
+    free(destino);
 }
 
 

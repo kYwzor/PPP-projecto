@@ -437,11 +437,13 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
     }
 }
 
-void viagens_destino(Lista_viagens lista_principal_viagens){
+void viagens_destino(Lista_viagens lista_viagens){
     char* destino;
     int found;
+    Lista_viagens aux_v;
 
-    if(lista_principal_viagens->next==NULL){
+    aux_v=lista_viagens;
+    if(aux_v->next==NULL){
         printf("Não existem viagens.\n");
         return;
     }
@@ -450,11 +452,11 @@ void viagens_destino(Lista_viagens lista_principal_viagens){
     destino=devolve_nome();
 
     found=0;
-    while(lista_principal_viagens->next!=NULL){
-        lista_principal_viagens=lista_principal_viagens->next;
-        if(strcmp(lista_principal_viagens->viagem->destino, destino)==0){
+    while(aux_v->next!=NULL){
+        aux_v=aux_v->next;
+        if(strcmp(aux_v->viagem->destino, destino)==0){
             found=1;
-            imprime_viagem(lista_principal_viagens->viagem);
+            imprime_viagem(aux_v->viagem);
         }
     }
     if(found==0)
@@ -463,4 +465,26 @@ void viagens_destino(Lista_viagens lista_principal_viagens){
     free(destino);
 }
 
+void viagens_utilizador(Lista_utilizadores node_ut){
+    Utilizador *utilizador;
+    Lista_viagens lv_sec;
+    Lista_utilizadores aux_u;
 
+    aux_u=node_ut;
+    utilizador=escolhe_utilizador(aux_u);
+    if(utilizador==NULL){
+        return;
+    }
+
+    while(utilizador != aux_u->utilizador || aux_u->next!=NULL)
+            aux_u=aux_u->next;
+
+    lv_sec=aux_u->vgm_registado;
+    if(lv_sec->next==NULL)
+        printf("Este cliente ainda não adquiriu nenhuma viagem");
+
+    while(lv_sec->next!=NULL){
+        lv_sec=lv_sec->next;
+        imprime_viagem(lv_sec->viagem);
+    }
+}

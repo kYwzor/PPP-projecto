@@ -3,7 +3,7 @@
 #define MAX_STRING 100
 
 typedef struct data{
-    int seg,min,hora,dia,mes,ano;
+    int min,hora,dia,mes,ano;
 }Data;
 
 typedef struct utilizador{

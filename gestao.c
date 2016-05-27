@@ -354,6 +354,30 @@ int procura_viagem_de_utilizador(Lista_utilizadores node_ut, Viagem* aux_v){
     return 0;
 }
 
+int encontra_posicao_utilizador(Lista_utilizadores lista_principal_utilizadores, Utilizador* ut){
+    Lista_utilizadores lu_aux;
+    int i;
+    i=0;
+    lu_aux=lista_principal_utilizadores;
+    while(lu_aux->next!=NULL && lu_aux->utilizador!=ut){
+        lu_aux=lu_aux->next;
+        i++;
+    }
+    return i;
+}
+
+int encontra_posicao_viagem(Lista_viagens lista_principal_viagens, Viagem* vgm){
+    Lista_viagens lv_aux;
+    int i;
+    i=0;
+    lv_aux=lista_principal_viagens;
+    while(lv_aux->next!=NULL && lv_aux->viagem!=vgm){
+        lv_aux=lv_aux->next;
+        i++;
+    }
+    return i;
+}
+
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
     Lista_utilizadores node_u, lut_aux, lu_sec;
     Lista_viagens node_v, lvgm_aux, lv_sec;

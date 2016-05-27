@@ -70,7 +70,7 @@ char* devolve_nome(){
 }
 
 int devolve_cc(Lista_utilizadores lista_utilizadores){
-    char cc[50];
+    char cc[MAX_STRING];
     int i, aux, j;
     Lista_utilizadores aux_l;
 
@@ -484,7 +484,7 @@ void viagens_destino(Lista_viagens lista_viagens){
         }
     }
     if(found==0)
-        printf("Não existem viagens com este destino.\n");
+        printf("Não existem viagens com o destino %s.\n", destino);
 
     free(destino);
 }

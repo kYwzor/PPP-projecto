@@ -68,12 +68,15 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
         }
         if(lv_aux->next!=NULL)
             fprintf(ficheiro, "\n_\n"); /*sinal de mudanca de viagem*/
+        else
+            fprintf(ficheiro,"\n");
     }
 
     /*pela lista de utilizadores*/
-    fprintf(ficheiro,"\n#\n"); /*sinal de comeco lista de utilizadores*/
+    fprintf(ficheiro,"#"); /*sinal de comeco lista de utilizadores*/
     lu_aux=lista_principal_utilizadores;
     while(lu_aux->next!=NULL){
+        fprintf(ficheiro,"\n");
         lu_aux=lu_aux->next;
         /*registados*/
         lv_aux=lu_aux->vgm_registado;
@@ -95,7 +98,6 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     }
 
     /*FIM*/
-    fprintf(ficheiro, "\n!"); /*sinal de fim*/
     fclose(ficheiro);
 }
 

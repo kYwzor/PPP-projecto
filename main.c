@@ -8,7 +8,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
 
     verifica_ficheiros(); /*verifica que os ficheiros estão disponíveis e funcionais*/
 
-    do{
+    while(1){
         printf(" _____ _____ _____ _____ \n|     |   __|   | |  |  |\n| | | |   __| | | |  |  |\n|_|_|_|_____|_|___|_____|\n___________________________\n\n");
         printf("[1] Registar uma viagem\n");
         printf("[2] Registar um utilizador\n");
@@ -54,12 +54,10 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 printf("Introduza uma opção válida!\n");
                 break;
         }
-        if(opcao!=8){
-            printf("Prima Enter para voltar ao menu.");
-            while(getchar()!='\n');
-        }
+        printf("Prima Enter para voltar ao menu.");
+        while(getchar()!='\n');
         system("cls");
-    }while(opcao!=8);
+    }
 }
 
 int main(){

@@ -31,7 +31,9 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     lv_aux=lista_principal_viagens;
     while(lv_aux->next!=NULL){
         lv_aux=lv_aux->next;
-        fprintf(ficheiro, "%s | %d-%d-%d %d:%d | %d\n", lv_aux->viagem->destino, lv_aux->viagem->partida->ano, lv_aux->viagem->partida->mes, lv_aux->viagem->partida->dia, lv_aux->viagem->partida->hora, lv_aux->viagem->partida->min, lv_aux->viagem->vagas);
+        fprintf(ficheiro, "%04d%02d%02d%02d%02d%09d%s", lv_aux->viagem->partida->ano, lv_aux->viagem->partida->mes, lv_aux->viagem->partida->dia, lv_aux->viagem->partida->hora, lv_aux->viagem->partida->min, lv_aux->viagem->vagas, lv_aux->viagem->destino);
+        if(lv_aux->next!=NULL)
+            fprintf(ficheiro, "\n");
     }
     fclose(ficheiro);
 
@@ -40,7 +42,9 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     lu_aux=lista_principal_utilizadores;
     while(lu_aux->next!=NULL){
         lu_aux=lu_aux->next;
-        fprintf(ficheiro, "%s | %d\n", lu_aux->utilizador->nome, lu_aux->utilizador->cc);
+        fprintf(ficheiro, "%08d%s",lu_aux->utilizador->cc, lu_aux->utilizador->nome);
+        if(lu_aux->next!=NULL)
+            fprintf(ficheiro, "\n");
     }
     fclose(ficheiro);
 
@@ -75,8 +79,9 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     /*pela lista de utilizadores*/
     fprintf(ficheiro,"#"); /*sinal de comeco lista de utilizadores*/
     lu_aux=lista_principal_utilizadores;
-    while(lu_aux->next!=NULL){
+    if(lu_aux->next!=NULL)
         fprintf(ficheiro,"\n");
+    while(lu_aux->next!=NULL){
         lu_aux=lu_aux->next;
         /*registados*/
         lv_aux=lu_aux->vgm_registado;
@@ -100,4 +105,3 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     /*FIM*/
     fclose(ficheiro);
 }
-

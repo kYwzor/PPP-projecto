@@ -14,33 +14,27 @@ int compara_datas(Data *d1, Data *d2){
 }
 
 void imprime_viagem(Viagem *viagem){
-    printf("%s\t--\tDia %d do %d de %d às %d hora e %d minutos.\n",viagem->destino, (viagem->partida)->dia, (viagem->partida)->mes,(viagem->partida)->ano, (viagem->partida)->hora, (viagem->partida)->min);
+    printf("Destino: %-20s-- Data: %04d-%02d-%02d -- Hora: %02d:%02d\n",viagem->destino, (viagem->partida)->ano, (viagem->partida)->mes, (viagem->partida)->dia, (viagem->partida)->hora, (viagem->partida)->min);
 }
 
 void imprime_utilizador(Utilizador *utilizador){
-    printf("Nome: %s\t--\tNúmero de CC: %d\n", utilizador->nome, utilizador->cc);
+    printf("CC: %08d -- Nome: %s\n", utilizador->cc, utilizador->nome);
 }
 
 int verifica_data(int dia, int mes, int ano){
-
    	if ((dia >= 1) && (mes >= 1 && mes <= 12) && ano>=0){
-            if (mes==2){
-                if (dia<=28)
-                    return 1;
-                else if (((ano % 400 == 0) || ((ano % 4 == 0) && (ano % 100 != 0))) && dia==29)
-                    return 1;
-                else
-                    return 0;
-            }
-            else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia <= 30))
+        if (mes==2){
+            if (dia<=28)
                 return 1;
-            else if ((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes ==8 || mes == 10 || mes == 12)&&(dia <=31) )
+            else if (((ano % 400 == 0) || ((ano % 4 == 0) && (ano % 100 != 0))) && dia==29)
                 return 1;
-            else
-                return 0;
+        }
+        else if ((mes == 4 || mes == 6 || mes == 9 || mes == 11) && (dia <= 30))
+            return 1;
+        else if ((mes == 1 || mes == 3 || mes == 5 || mes == 7 || mes ==8 || mes == 10 || mes == 12)&&(dia <=31) )
+            return 1;
     }
-    else
-        return 0;
+    return 0;
 }
 
 char* devolve_nome(){
@@ -53,10 +47,10 @@ char* devolve_nome(){
         i=0;
         contador=0;
         invalido=0;
-        gets(nome);
+        fgets(nome, MAX_STRING, stdin);
         retira_enter(nome);
         while(nome[i] != '\0'){
-            if((nome[i]>='A' && nome[i]<='Z') || (nome[i]>='a' && nome[i]<='z') || nome[i] == ' ')
+             if((nome[i]>='A' && nome[i]<='Z') || (nome[i]>='a' && nome[i]<='z') || (nome[i]>='À' && nome[i]<='Ö') || (nome[i]>='Ø' && nome[i]<='ö') || (nome[i]>='ø' && nome[i]<='ÿ') || nome[i] == ' ' || nome[i] == '-')
                 contador++;
             i++;
         }
@@ -71,13 +65,13 @@ char* devolve_nome(){
 
 int devolve_cc(Lista_utilizadores lista_utilizadores){
     char cc[MAX_STRING];
-    int i, aux, j;
+    int i, aux;
     Lista_utilizadores aux_l;
 
     do{
         aux_l=lista_utilizadores;
         printf("Insira o número de cartão de cidadão do cliente (8 dígitos): ");
-        gets(cc);
+        fgets(cc, MAX_STRING, stdin);
         retira_enter(cc);
 
         aux=0;
@@ -85,20 +79,22 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
             if(isdigit(cc[i]))
                 aux++;
         }
-
-        j=0;
-        while(aux_l->next!=NULL){
-            aux_l=aux_l->next;
-            if(aux_l->utilizador->cc==atoi(cc))
-                j=1;
-        }
         if (aux != strlen(cc))
             printf("Número introduzido inválido.\n");
         else if (strlen(cc)!=8)
             printf("Número inserido não tem 8 dígitos.\n");
-        else if (j==1)
-            printf("Número de Cartão de Cidadão já existente.\n");
-    }while(strlen(cc)!=8 || aux != 8 || j==1);
+        else{
+            i=0;
+            while(aux_l->next!=NULL){
+                aux_l=aux_l->next;
+                if(aux_l->utilizador->cc==atoi(cc)){
+                    i=1;
+                    printf("Número de Cartão de Cidadão já existente.\n");
+                }
+            }
+
+        }
+    }while(strlen(cc)!=8 || aux != 8 || i==1);
 
     /*passa de char para int*/
     return atoi(cc);
@@ -109,19 +105,19 @@ int devolve_inteiro(){
     int i, aux;
 
     do{
-        gets(numero);
+        fgets(numero, MAX_STRING, stdin);
         retira_enter(numero);
 
         aux=0;
-
         for(i=0; numero[i] != '\0'; i++){
             if(isdigit(numero[i]))
                 aux++;
         }
         if (aux != i || i==0)
             printf("Número introduzido inválido. Introduza de novo: ");
-
-    }while(aux != i || i==0);
+        else if (strlen(numero)>9)
+            printf("Apenas permitidos números até 9 dígitos. Introduza de novo: ");
+    }while(aux != i || i==0 || strlen(numero)>9);
 
     /*passa de char para int*/
 
@@ -191,9 +187,8 @@ void regista_viagem_manual(Lista_viagens lista_principal){
     printf("Número de vagas da nova viagem: ");
     vagas=devolve_inteiro();
 
-
+    printf("Insira a data de partida\n");
     do{
-        printf("Data de partida\n");
         printf("Ano:");
         data_partida->ano=devolve_inteiro();
         printf("Mês:");
@@ -203,11 +198,13 @@ void regista_viagem_manual(Lista_viagens lista_principal){
         aux=verifica_data(data_partida->dia, data_partida->mes, data_partida->ano);
         if(aux==0)
             printf("Data inválida. Introduza a data novamente!\n");
-    }while(aux==0);
+        else if(data_partida->ano > 9999)
+            printf("Apenas permitidas datas até ao ano 9999. Introduza a data novamente!\n");
+    }while((aux==0)||(data_partida->ano > 9999));
 
+    printf("Insira as horas da partida\n");
     do{
         aux=0;
-        printf("Horas da partida\n");
         printf("Hora:");
         data_partida->hora=devolve_inteiro();
         printf("Minutos:");
@@ -505,7 +502,7 @@ void viagens_utilizador(Lista_utilizadores node_ut){
 
     lv_sec=aux_u->vgm_registado;
     if(lv_sec->next==NULL)
-        printf("Este cliente ainda não adquiriu nenhuma viagem");
+        printf("Este cliente ainda não adquiriu nenhuma viagem.\n");
 
     while(lv_sec->next!=NULL){
         lv_sec=lv_sec->next;

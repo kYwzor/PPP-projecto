@@ -34,7 +34,9 @@ Lista_utilizadores cria_lista_utilizadores(){
     return aux;
 }
 
-void retira_enter(char* nome){
-    if(nome[strlen(nome)-1] == '\n')
-        nome[strlen(nome)-1] = '\0';
+void retira_enter(char* str){
+    int len;
+    len=strlen(str);
+    if(len>0 && str[len-1] == '\n')
+        str[len-1] = '\0';
 }

@@ -1,6 +1,6 @@
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
-#define MAX_STRING 100
+#define MAX_STRING 500
 
 typedef struct data{
     int min,hora,dia,mes,ano;

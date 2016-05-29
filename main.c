@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <locale.h>
 #include "header.h"
 
 void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){

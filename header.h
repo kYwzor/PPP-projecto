@@ -1,6 +1,12 @@
 #ifndef HEADER_H_INCLUDED
 #define HEADER_H_INCLUDED
 #define MAX_STRING 500
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
+#include <unistd.h>
+#include <string.h>
+#include <ctype.h>
 
 typedef struct data{
     int min,hora,dia,mes,ano;
@@ -34,4 +40,4 @@ typedef struct lnode_vgm{
     Lista_viagens next;
 }Lista_viagens_node;
 
-#endif // HEADER_H_INCLUDED
+#endif

@@ -1,6 +1,3 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <string.h>
 #include "header.h"
 
 void verifica_ficheiros(){
@@ -230,7 +227,7 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
 
             lv_sec=lu_aux->vgm_espera;
             char_aux = strtok(linha, "|");
-            while(char_aux != NULL){    /*1ª linha para registados*/
+            while(char_aux != NULL){    /*2ª linha para espera*/
                 node_v = cria_lista_viagens();
                 node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
                 lv_sec->next=node_v;

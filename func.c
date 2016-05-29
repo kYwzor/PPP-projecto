@@ -1,5 +1,3 @@
-#include <stdio.h>
-#include <stdlib.h>
 #include "header.h"
 
 Lista_viagens cria_lista_viagens(){
@@ -41,3 +39,48 @@ void retira_enter(char* str){
         str[len-1] = '\0';
 }
 
+void limpa_alocacoes(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
+    Lista_viagens lv_aux, lv_sec;
+    Lista_utilizadores lu_aux, lu_sec;
+
+    lv_aux=lista_principal_viagens;
+    while(lv_aux->next!=NULL){
+        lv_aux=lv_aux->next;
+        free(lv_aux->viagem->destino);
+        free(lv_aux->viagem->partida);
+        free(lv_aux->viagem);
+        lu_sec=lv_aux->ut_registado;
+        while(lu_sec!=NULL){
+            lu_aux=lu_sec;
+            lu_sec=lu_sec->next;
+            free(lu_aux);
+        }
+        lu_sec=lv_aux->ut_espera;
+        while(lu_sec!=NULL){
+            lu_aux=lu_sec;
+            lu_sec=lu_sec->next;
+            free(lu_aux);
+        }
+    }
+    free(lista_principal_utilizadores);
+
+    lu_aux=lista_principal_utilizadores;
+    while(lu_aux->next!=NULL){
+        lu_aux=lu_aux->next;
+        free(lu_aux->utilizador->nome);
+        free(lu_aux->utilizador);
+        lv_sec=lu_aux->vgm_registado;
+        while(lv_sec!=NULL){
+            lv_aux=lv_sec;
+            lv_sec=lv_sec->next;
+            free(lv_aux);
+        }
+        lv_sec=lu_aux->vgm_espera;
+        while(lv_sec!=NULL){
+            lv_aux=lv_sec;
+            lv_sec=lv_sec->next;
+            free(lv_aux);
+        }
+    }
+    free(lista_principal_viagens);
+}

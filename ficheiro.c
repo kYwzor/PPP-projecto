@@ -60,7 +60,9 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
         while(lu_aux->next!=NULL){
             lu_aux=lu_aux->next;
             int_aux=encontra_posicao_utilizador(lista_principal_utilizadores, lu_aux->utilizador);
-            fprintf(ficheiro, "%d|", int_aux);
+            fprintf(ficheiro, "%d", int_aux);
+            if(lu_aux->next!=NULL)
+                fprintf(ficheiro, "|");
         }
         /*espera*/
         fprintf(ficheiro, "\n"); /*mudanca de paragrafo divide registados de espera*/
@@ -68,19 +70,18 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
         while(lu_aux->next!=NULL){
             lu_aux=lu_aux->next;
             int_aux=encontra_posicao_utilizador(lista_principal_utilizadores, lu_aux->utilizador);
-            fprintf(ficheiro, "%d|", int_aux);
+            fprintf(ficheiro, "%d", int_aux);
+            if(lu_aux->next!=NULL)
+                fprintf(ficheiro, "|");
         }
-        if(lv_aux->next!=NULL)
-            fprintf(ficheiro, "\n_\n"); /*sinal de mudanca de viagem*/
-        else
-            fprintf(ficheiro,"\n");
+        fprintf(ficheiro,"\n"); /*mudanca de paragrafo marca mudanca de viagem*/
     }
 
     /*pela lista de utilizadores*/
-    fprintf(ficheiro,"#"); /*sinal de comeco lista de utilizadores*/
+
     lu_aux=lista_principal_utilizadores;
     if(lu_aux->next!=NULL)
-        fprintf(ficheiro,"\n");
+        fprintf(ficheiro,"#\n"); /*sinal de comeco lista de utilizadores*/
     while(lu_aux->next!=NULL){
         lu_aux=lu_aux->next;
         /*registados*/
@@ -88,7 +89,9 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
         while(lv_aux->next!=NULL){
             lv_aux=lv_aux->next;
             int_aux=encontra_posicao_viagem(lista_principal_viagens, lv_aux->viagem);
-            fprintf(ficheiro, "%d|", int_aux);
+            fprintf(ficheiro, "%d", int_aux);
+            if(lv_aux->next!=NULL)
+                fprintf(ficheiro, "|");
         }
         /*espera*/
         fprintf(ficheiro, "\n"); /*mudanca de paragrafo divide registados de espera*/
@@ -96,10 +99,12 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
         while(lv_aux->next!=NULL){
             lv_aux=lv_aux->next;
             int_aux=encontra_posicao_viagem(lista_principal_viagens, lv_aux->viagem);
-            fprintf(ficheiro, "%d|", int_aux);
+            fprintf(ficheiro, "%d", int_aux);
+            if(lv_aux->next!=NULL)
+                fprintf(ficheiro, "|");
         }
         if(lu_aux->next!=NULL)
-            fprintf(ficheiro, "\n_\n"); /*sinal de mudanca de utilizador*/
+            fprintf(ficheiro, "\n"); /*mudanca de paragrafo marca mudanca de utilizador*/
     }
 
     /*FIM*/
@@ -108,8 +113,8 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
 
 
 void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
-    Lista_utilizadores lu_aux;
-    Lista_viagens lv_aux;
+    Lista_utilizadores lu_aux, node_u, lu_sec;
+    Lista_viagens lv_aux, node_v, lv_sec;
     FILE *ficheiro;
     char linha[MAX_STRING], copia[MAX_STRING];
     char *char_aux;
@@ -166,5 +171,79 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
 
         regista_cliente(lista_principal_utilizadores, char_aux, int_aux);
     }
+    fclose(ficheiro);
+
+/*Compras*/
+
+    ficheiro=fopen("compras.txt", "r");
+
+    int_aux=1;
+    lv_aux=lista_principal_viagens;
+    lu_aux=lista_principal_utilizadores;
+
+    while(fgets(linha, MAX_STRING, ficheiro)!=NULL){
+        if(strcmp(linha, "#\n")==0)
+            int_aux=0;
+
+        /*pela lista de viagens*/
+        else if(int_aux){
+            lv_aux=lv_aux->next;
+
+            lu_sec=lv_aux->ut_registado;
+            char_aux = strtok(linha, "|");
+            while(char_aux != NULL){    /*1ª linha para registados*/
+                if(*(char_aux)!='\n'){
+                    node_u = cria_lista_utilizadores();
+                    node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
+                    lu_sec->next=node_u;
+                    lu_sec=lu_sec->next;
+                }
+                char_aux = strtok(NULL, "|");
+            }
+            fgets(linha, MAX_STRING, ficheiro);
+
+            lu_sec=lv_aux->ut_espera;
+            char_aux = strtok(linha, "|");
+            while(char_aux != NULL){    /*2ª linha para espera*/
+                if(*(char_aux)!='\n'){
+                    node_u = cria_lista_utilizadores();
+                    node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
+                    lu_sec->next=node_u;
+                    lu_sec=lu_sec->next;
+                }
+                char_aux = strtok(NULL, "|");
+            }
+        }
+        /*pela lista de utilizadores*/
+        else{
+            lu_aux=lu_aux->next;
+
+            lv_sec=lu_aux->vgm_registado;
+            char_aux = strtok(linha, "|");
+            while(char_aux != NULL){    /*1ª linha para registados*/
+                if(*(char_aux)!='\n'){
+                    node_v = cria_lista_viagens();
+                    node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
+                    lv_sec->next=node_v;
+                    lv_sec=lv_sec->next;
+                }
+                char_aux = strtok(NULL, "|");
+            }
+            fgets(linha, MAX_STRING, ficheiro);
+
+            lv_sec=lu_aux->vgm_espera;
+            char_aux = strtok(linha, "|");
+            while(char_aux != NULL){    /*1ª linha para registados*/
+                if(*(char_aux)!='\n'){
+                    node_v = cria_lista_viagens();
+                    node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
+                    lv_sec->next=node_v;
+                    lv_sec=lv_sec->next;
+                }
+                char_aux = strtok(NULL, "|");
+            }
+        }
+    }
+    fclose(ficheiro);
 }
 

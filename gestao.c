@@ -218,22 +218,21 @@ void regista_viagem_manual(Lista_viagens lista_principal){
 }
 
 void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Utilizador *utilizador){
-    Lista_utilizadores no;
+    Lista_utilizadores lu_aux, no;
     Lista_viagens reg, esp;
     no = cria_lista_utilizadores();
-
     reg = cria_lista_viagens();
-    no->vgm_registado=reg;
-
     esp = cria_lista_viagens();
-    no->vgm_espera=esp;
 
-    while(lista_principal->next!=NULL){
-        lista_principal=lista_principal->next;
-    }
+    no->vgm_registado=reg;
+    no->vgm_espera=esp;
     no->utilizador=utilizador;
-    no->next=NULL;
-    lista_principal->next=no;
+
+    lu_aux=lista_principal;
+    while(lu_aux->next!=NULL){
+        lu_aux=lu_aux->next;
+    }
+    lu_aux->next=no;
 }
 
 void regista_cliente(Lista_utilizadores lista_principal, char *nome, int cc){
@@ -352,25 +351,37 @@ int procura_viagem_de_utilizador(Lista_utilizadores node_ut, Viagem* aux_v){
 int encontra_posicao_utilizador(Lista_utilizadores lista_principal_utilizadores, Utilizador* ut){
     Lista_utilizadores lu_aux;
     int i;
-    i=0;
     lu_aux=lista_principal_utilizadores;
-    while(lu_aux->next!=NULL && lu_aux->utilizador!=ut){
+    for(i=0;lu_aux->utilizador!=ut;i++)
         lu_aux=lu_aux->next;
-        i++;
-    }
     return i;
+}
+
+Utilizador *utilizador_por_posicao(Lista_utilizadores lista_principal_utilizadores, int posicao){
+    Lista_utilizadores lu_aux;
+    int i;
+    lu_aux=lista_principal_utilizadores;
+    for(i=0;i<posicao; i++)
+        lu_aux=lu_aux->next;
+    return lu_aux->utilizador;
 }
 
 int encontra_posicao_viagem(Lista_viagens lista_principal_viagens, Viagem* vgm){
     Lista_viagens lv_aux;
     int i;
-    i=0;
     lv_aux=lista_principal_viagens;
-    while(lv_aux->next!=NULL && lv_aux->viagem!=vgm){
+    for(i=0;lv_aux->viagem!=vgm;i++)
         lv_aux=lv_aux->next;
-        i++;
-    }
     return i;
+}
+
+Viagem *viagem_por_posicao(Lista_viagens lista_principal_viagens, int posicao){
+    Lista_viagens lv_aux;
+    int i;
+    lv_aux=lista_principal_viagens;
+    for(i=0;i<posicao;i++)
+        lv_aux=lv_aux->next;
+    return lv_aux->viagem;
 }
 
 void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_viagens){
@@ -461,7 +472,6 @@ void viagens_destino(Lista_viagens lista_viagens){
         return;
     }
     printf("Introduza o destino que deseja: ");
-    destino=(char*) malloc(MAX_STRING * sizeof(char));
     destino=devolve_nome();
 
     found=0;

@@ -241,4 +241,3 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
     }
     fclose(ficheiro);
 }
-

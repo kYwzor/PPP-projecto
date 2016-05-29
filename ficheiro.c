@@ -169,7 +169,7 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
         retira_enter(copia);
         char_aux=strdup(copia);
 
-        regista_cliente(lista_principal_utilizadores, char_aux, int_aux);
+        regista_utilizador(lista_principal_utilizadores, char_aux, int_aux);
     }
     fclose(ficheiro);
 

@@ -522,24 +522,25 @@ void viagens_destino(Lista_viagens lista_viagens){
     free(destino);
 }
 
-void viagens_utilizador(Lista_utilizadores node_ut){
+void viagens_utilizador(Lista_utilizadores lista_principal_utilizadores){
     Utilizador *utilizador;
     Lista_viagens lv_sec;
     Lista_utilizadores aux_u;
 
-    aux_u=node_ut;
+    aux_u=lista_principal_utilizadores;
     utilizador=escolhe_utilizador(aux_u);
     if(utilizador==NULL){
         return;
     }
-
-    while(utilizador != aux_u->utilizador || aux_u->next!=NULL)
-            aux_u=aux_u->next;
+    system("cls");
+    while(utilizador != aux_u->utilizador)
+        aux_u=aux_u->next;
 
     lv_sec=aux_u->vgm_registado;
     if(lv_sec->next==NULL)
         printf("Este cliente ainda não adquiriu nenhuma viagem.\n");
 
+    printf("Lista de viagens do utilizador %s:\n", utilizador->nome);
     while(lv_sec->next!=NULL){
         lv_sec=lv_sec->next;
         imprime_viagem(lv_sec->viagem);
@@ -559,10 +560,9 @@ void todos_com_viagem(Lista_utilizadores lista_utilizadores){
         return;
     }
 
-    lv_reg=aux_u->vgm_registado;
-    lv_esp=aux_u->vgm_espera;
-
-    while(aux_u!=NULL){;
+    while(aux_u!=NULL){
+        lv_reg=aux_u->vgm_registado;
+        lv_esp=aux_u->vgm_espera;
         if(lv_esp->next!=NULL || lv_reg->next!=NULL){
             imprime_utilizador(aux_u->utilizador);
             flag=1;

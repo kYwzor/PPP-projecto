@@ -473,11 +473,9 @@ void viagens_destino(Lista_viagens lista_viagens){
         return;
     }
     printf("Introduza o destino que deseja: ");
-    destino=(char*) malloc(MAX_STRING * sizeof(char));
     destino=devolve_nome();
 
     found=0;
-
     while(aux_v->next!=NULL){
         aux_v=aux_v->next;
         if(strcmp(aux_v->viagem->destino, destino)==0){

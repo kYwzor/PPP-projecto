@@ -182,7 +182,8 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
     lu_aux=lista_principal_utilizadores;
 
     while(fgets(linha, MAX_STRING, ficheiro)!=NULL){
-        if(strcmp(linha, "#\n")==0)
+        retira_enter(linha);
+        if(*linha=='#')
             int_aux=0;
 
         /*pela lista de viagens*/
@@ -192,25 +193,22 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
             lu_sec=lv_aux->ut_registado;
             char_aux = strtok(linha, "|");
             while(char_aux != NULL){    /*1ª linha para registados*/
-                if(*(char_aux)!='\n'){
-                    node_u = cria_lista_utilizadores();
-                    node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
-                    lu_sec->next=node_u;
-                    lu_sec=lu_sec->next;
-                }
+                node_u = cria_lista_utilizadores();
+                node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
+                lu_sec->next=node_u;
+                lu_sec=lu_sec->next;
                 char_aux = strtok(NULL, "|");
             }
             fgets(linha, MAX_STRING, ficheiro);
+            retira_enter(linha);
 
             lu_sec=lv_aux->ut_espera;
             char_aux = strtok(linha, "|");
             while(char_aux != NULL){    /*2ª linha para espera*/
-                if(*(char_aux)!='\n'){
-                    node_u = cria_lista_utilizadores();
-                    node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
-                    lu_sec->next=node_u;
-                    lu_sec=lu_sec->next;
-                }
+                node_u = cria_lista_utilizadores();
+                node_u->utilizador=utilizador_por_posicao(lista_principal_utilizadores, atoi(char_aux));
+                lu_sec->next=node_u;
+                lu_sec=lu_sec->next;
                 char_aux = strtok(NULL, "|");
             }
         }
@@ -221,25 +219,22 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
             lv_sec=lu_aux->vgm_registado;
             char_aux = strtok(linha, "|");
             while(char_aux != NULL){    /*1ª linha para registados*/
-                if(*(char_aux)!='\n'){
-                    node_v = cria_lista_viagens();
-                    node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
-                    lv_sec->next=node_v;
-                    lv_sec=lv_sec->next;
-                }
+                node_v = cria_lista_viagens();
+                node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
+                lv_sec->next=node_v;
+                lv_sec=lv_sec->next;
                 char_aux = strtok(NULL, "|");
             }
             fgets(linha, MAX_STRING, ficheiro);
+            retira_enter(linha);
 
             lv_sec=lu_aux->vgm_espera;
             char_aux = strtok(linha, "|");
             while(char_aux != NULL){    /*1ª linha para registados*/
-                if(*(char_aux)!='\n'){
-                    node_v = cria_lista_viagens();
-                    node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
-                    lv_sec->next=node_v;
-                    lv_sec=lv_sec->next;
-                }
+                node_v = cria_lista_viagens();
+                node_v->viagem=viagem_por_posicao(lista_principal_viagens, atoi(char_aux));
+                lv_sec->next=node_v;
+                lv_sec=lv_sec->next;
                 char_aux = strtok(NULL, "|");
             }
         }

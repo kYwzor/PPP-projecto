@@ -28,7 +28,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 2:
-                regista_cliente(lista_principal_utilizadores);
+                regista_cliente_manual(lista_principal_utilizadores);
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 3:
@@ -65,7 +65,7 @@ int main(){
     Lista_utilizadores lista_principal_utilizadores;
     lista_principal_viagens = cria_lista_viagens();
     lista_principal_utilizadores = cria_lista_utilizadores();
-
+    carrega_listas(lista_principal_viagens, lista_principal_utilizadores);
     setlocale(LC_ALL, "Portuguese");
 
     /*verifica_ficheiros(); verifica que os ficheiros estão disponíveis e funcionais

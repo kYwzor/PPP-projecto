@@ -105,3 +105,66 @@ void guarda_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lis
     /*FIM*/
     fclose(ficheiro);
 }
+
+
+void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
+    Lista_utilizadores lu_aux;
+    Lista_viagens lv_aux;
+    FILE *ficheiro;
+    char linha[MAX_STRING], copia[MAX_STRING];
+    char *char_aux;
+    Data *data_partida;
+    int int_aux;
+
+/*Viagens*/
+    ficheiro=fopen("viagens.txt", "r");
+    while(fgets(linha, MAX_STRING, ficheiro)!=NULL){
+        data_partida=(Data*) malloc(sizeof(Data));
+
+        strncpy(copia, linha, 4);
+        copia[4]='\0';
+        data_partida->ano=atoi(copia);
+
+        strncpy(copia, linha+4, 2);
+        copia[2]='\0';
+        data_partida->mes=atoi(copia);
+
+        strncpy(copia, linha+6, 2);
+        copia[2]='\0';
+        data_partida->dia=atoi(copia);
+
+        strncpy(copia, linha+8, 2);
+        copia[2]='\0';
+        data_partida->hora=atoi(copia);
+
+        strncpy(copia, linha+10, 2);
+        copia[2]='\0';
+        data_partida->min=atoi(copia);
+
+        strncpy(copia, linha+12, 9);
+        copia[9]='\0';
+        int_aux=atoi(copia);
+
+        strcpy(copia, linha+21);
+        retira_enter(copia);
+        char_aux=strdup(copia);
+
+        regista_viagem(lista_principal_viagens, char_aux, data_partida, int_aux);
+    }
+    fclose(ficheiro);
+
+/*Utilizadores*/
+    ficheiro=fopen("utilizadores.txt", "r");
+    while(fgets(linha, MAX_STRING, ficheiro)!=NULL){
+        strncpy(copia, linha, 8);
+        copia[8]='\0';
+        int_aux=atoi(copia);
+
+        strcpy(copia, linha+8);
+        retira_enter(copia);
+        char_aux=strdup(copia);
+
+        regista_cliente(lista_principal_utilizadores, char_aux, int_aux);
+    }
+}
+

@@ -40,3 +40,4 @@ void retira_enter(char* str){
     if(len>0 && str[len-1] == '\n')
         str[len-1] = '\0';
 }
+

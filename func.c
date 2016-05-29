@@ -40,12 +40,12 @@ void retira_enter(char* str){
 }
 
 void limpa_alocacoes(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
-    Lista_viagens lv_aux, lv_sec;
-    Lista_utilizadores lu_aux, lu_sec;
+    Lista_viagens lv_aux, lv_sec, lv_free;
+    Lista_utilizadores lu_aux, lu_sec, lu_free;
 
-    lv_aux=lista_principal_viagens;
-    while(lv_aux->next!=NULL){
-        lv_aux=lv_aux->next;
+    lv_aux=lista_principal_viagens->next;
+    free(lista_principal_viagens);
+    while(lv_aux!=NULL){
         free(lv_aux->viagem->destino);
         free(lv_aux->viagem->partida);
         free(lv_aux->viagem);
@@ -61,12 +61,14 @@ void limpa_alocacoes(Lista_viagens lista_principal_viagens, Lista_utilizadores l
             lu_sec=lu_sec->next;
             free(lu_aux);
         }
+        lv_free=lv_aux;
+        lv_aux=lv_aux->next;
+        free(lv_free);
     }
-    free(lista_principal_utilizadores);
 
-    lu_aux=lista_principal_utilizadores;
-    while(lu_aux->next!=NULL){
-        lu_aux=lu_aux->next;
+    lu_aux=lista_principal_utilizadores->next;
+    free(lista_principal_utilizadores);
+    while(lu_aux!=NULL){
         free(lu_aux->utilizador->nome);
         free(lu_aux->utilizador);
         lv_sec=lu_aux->vgm_registado;
@@ -81,6 +83,8 @@ void limpa_alocacoes(Lista_viagens lista_principal_viagens, Lista_utilizadores l
             lv_sec=lv_sec->next;
             free(lv_aux);
         }
+        lu_free=lu_aux;
+        lu_aux=lu_aux->next;
+        free(lu_free);
     }
-    free(lista_principal_viagens);
 }

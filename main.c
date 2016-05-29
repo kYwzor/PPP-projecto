@@ -6,8 +6,6 @@
 void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_principal_utilizadores){
 	int opcao = 0;
 
-    verifica_ficheiros(); /*verifica que os ficheiros estão disponíveis e funcionais*/
-
     while(1){
         printf(" _____ _____ _____ _____ \n|     |   __|   | |  |  |\n| | | |   __| | | |  |  |\n|_|_|_|_____|_|___|_____|\n___________________________\n\n");
         printf("[1] Registar uma viagem\n");
@@ -65,11 +63,9 @@ int main(){
     Lista_utilizadores lista_principal_utilizadores;
     lista_principal_viagens = cria_lista_viagens();
     lista_principal_utilizadores = cria_lista_utilizadores();
+    verifica_ficheiros();
     carrega_listas(lista_principal_viagens, lista_principal_utilizadores);
     setlocale(LC_ALL, "Portuguese");
-
-    /*verifica_ficheiros(); verifica que os ficheiros estão disponíveis e funcionais
-    ficheiro_para_lista(lista_principal ,"listas.txt");*/
 
     menu(lista_principal_viagens, lista_principal_utilizadores);
     guarda_listas(lista_principal_viagens, lista_principal_utilizadores);

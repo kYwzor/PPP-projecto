@@ -6,11 +6,17 @@
 
 int compara_datas(Data *d1, Data *d2){
     int a, b;
-    a=(d1->ano)*100000000+(d1->mes)*1000000+(d1->dia)*10000+(d1->hora)*100+(d1->min);
-    b=(d2->ano)*100000000+(d2->mes)*1000000+(d2->dia)*10000+(d2->hora)*100+(d2->min);
+    a=(d1->ano)*10000+(d1->mes)*100+(d1->dia);
+    b=(d2->ano)*10000+(d2->mes)*100+(d2->dia);
     if (a>b) return 1;
     else if (a<b) return -1;
-    else return 0;
+    else{
+        a=d1->hora*100+d1->min;
+        b=d2->hora*100+d2->min;
+        if (a>b) return 1;
+        else if (a<b) return -1;
+        else return 0;
+    }
 }
 
 void imprime_viagem(Viagem *viagem){
@@ -139,20 +145,12 @@ void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
     Lista_viagens no;
     Lista_utilizadores reg,esp;
     Lista_viagens ant, inutil;
-    no = (Lista_viagens) malloc(sizeof (Lista_viagens_node));
+    no = cria_lista_viagens();
 
-    reg = (Lista_utilizadores) malloc(sizeof(Lista_utilizadores_node));
-    reg->utilizador=NULL;
-    reg->vgm_espera=NULL;
-    reg->vgm_registado=NULL;
-    reg->next=NULL;
+    reg = cria_lista_utilizadores();
     no->ut_registado=reg;
 
-    esp = (Lista_utilizadores) malloc(sizeof(Lista_utilizadores_node));
-    esp->utilizador=NULL;
-    esp->vgm_espera=NULL;
-    esp->vgm_registado=NULL;
-    esp->next=NULL;
+    esp = cria_lista_utilizadores();
     no->ut_espera=esp;
 
     if (no != NULL) {
@@ -222,20 +220,12 @@ void regista_viagem_manual(Lista_viagens lista_principal){
 void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Utilizador *utilizador){
     Lista_utilizadores no;
     Lista_viagens reg, esp;
-    no = (Lista_utilizadores) malloc (sizeof(Lista_utilizadores_node));
+    no = cria_lista_utilizadores();
 
-    reg = (Lista_viagens) malloc(sizeof(Lista_viagens_node));
-    reg->viagem=NULL;
-    reg->ut_espera=NULL;
-    reg->ut_registado=NULL;
-    reg->next=NULL;
+    reg = cria_lista_viagens();
     no->vgm_registado=reg;
 
-    esp = (Lista_viagens) malloc(sizeof(Lista_viagens_node));
-    esp->viagem=NULL;
-    esp->ut_espera=NULL;
-    esp->ut_registado=NULL;
-    esp->next=NULL;
+    esp = cria_lista_viagens();
     no->vgm_espera=esp;
 
     while(lista_principal->next!=NULL){
@@ -246,17 +236,25 @@ void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Uti
     lista_principal->next=no;
 }
 
-void regista_cliente(Lista_utilizadores lista_principal){
-    char *nome;
-    int cc;
+void regista_cliente(Lista_utilizadores lista_principal, char *nome, int cc){
     Utilizador *utilizador;
-    printf("Insira o nome do cliente: ");
-    nome=devolve_nome();
-    cc=devolve_cc(lista_principal);
+
     utilizador=(Utilizador*) malloc(sizeof(Utilizador));
+
     utilizador->nome=nome;
     utilizador->cc=cc;
     insere_lista_principal_utilizadores(lista_principal, utilizador);
+}
+
+
+void regista_cliente_manual(Lista_utilizadores lista_principal){
+    char *nome;
+    int cc;
+
+    printf("Insira o nome do cliente: ");
+    nome=devolve_nome();
+    cc=devolve_cc(lista_principal);
+    regista_cliente(lista_principal, nome, cc);
     printf("Cliente inserido com sucesso!\n");
 }
 
@@ -408,17 +406,11 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
         return;
     }
     else if (aux_int==0){
-        node_u = (Lista_utilizadores) malloc (sizeof (Lista_utilizadores_node));
+        node_u = cria_lista_utilizadores();
         node_u->utilizador=lut_aux->utilizador;
-        node_u->next=NULL;
-        node_u->vgm_espera=NULL;
-        node_u->vgm_registado=NULL;
 
-        node_v = (Lista_viagens) malloc (sizeof (Lista_viagens_node));
+        node_v = cria_lista_viagens();
         node_v->viagem=lvgm_aux->viagem;
-        node_v->next=NULL;
-        node_v->ut_espera=NULL;
-        node_v->ut_registado=NULL;
 
         if(lvgm_aux->viagem->vagas > 0){
             lu_sec=lvgm_aux->ut_registado;

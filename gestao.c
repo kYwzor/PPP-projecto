@@ -464,61 +464,25 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
 void viagens_destino(Lista_viagens lista_viagens){
     char* destino;
     int found;
-    Lista_viagens aux_v, lv_ant, lv_header, lv_atual, aux_free;
+    Lista_viagens aux_v;
 
-    lv_header=cria_lista_viagens();
     aux_v=lista_viagens;
     if(aux_v->next==NULL){
         printf("Não existem viagens.\n");
         return;
     }
     printf("Introduza o destino que deseja: ");
-    destino=(char*) malloc(MAX_STRING * sizeof(char));
     destino=devolve_nome();
 
     found=0;
-
     while(aux_v->next!=NULL){
         aux_v=aux_v->next;
         if(strcmp(aux_v->viagem->destino, destino)==0){
-            if(found==0){
-                lv_ant=(Lista_viagens) malloc(sizeof(Lista_viagens_node));
-                lv_ant->ut_espera=aux_v->ut_espera;
-                lv_ant->ut_registado=aux_v->ut_registado;
-                lv_ant->viagem=aux_v->viagem;
-                lv_ant->next=NULL;
-                lv_header->next=lv_ant;
-                found=1;
-            }
-
-            else{
-                lv_atual=(Lista_viagens) malloc(sizeof(Lista_viagens_node));
-                lv_atual->ut_espera=aux_v->ut_espera;
-                lv_atual->ut_registado=aux_v->ut_registado;
-                lv_atual->viagem=aux_v->viagem;
-
-                lv_atual->next=lv_ant;
-                lv_header->next=lv_atual;
-
-                lv_ant=lv_atual;
-                found=1;
-            }
+            found=1;
+            imprime_viagem(aux_v->viagem);
         }
     }
-    aux_free=lv_header;
-    if(found!=0){
-        while(lv_header->next!=NULL){
-            lv_header=lv_header->next;
-            imprime_viagem(lv_header->viagem);
-            free(aux_free->next);
-            free(aux_free->ut_espera);
-            free(aux_free->ut_registado);
-            free(aux_free->viagem);
-            free(aux_free);
-            aux_free=lv_header->next;
-        }
-    }
-    else
+    if(found==0)
         printf("Não existem viagens com o destino %s.\n", destino);
 
     free(destino);

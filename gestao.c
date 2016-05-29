@@ -76,7 +76,7 @@ int devolve_cc(Lista_utilizadores lista_utilizadores){
 
     do{
         aux_l=lista_utilizadores;
-        printf("Insira o número de cartão de cidadão do cliente (8 dígitos): ");
+        printf("Insira o número de cartão de cidadão do utilizador (8 dígitos): ");
         fgets(cc, MAX_STRING, stdin);
         retira_enter(cc);
 
@@ -235,7 +235,7 @@ void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Uti
     lu_aux->next=no;
 }
 
-void regista_cliente(Lista_utilizadores lista_principal, char *nome, int cc){
+void regista_utilizador(Lista_utilizadores lista_principal, char *nome, int cc){
     Utilizador *utilizador;
 
     utilizador=(Utilizador*) malloc(sizeof(Utilizador));
@@ -246,15 +246,15 @@ void regista_cliente(Lista_utilizadores lista_principal, char *nome, int cc){
 }
 
 
-void regista_cliente_manual(Lista_utilizadores lista_principal){
+void regista_utilizador_manual(Lista_utilizadores lista_principal){
     char *nome;
     int cc;
 
-    printf("Insira o nome do cliente: ");
+    printf("Insira o nome do utilizador: ");
     nome=devolve_nome();
     cc=devolve_cc(lista_principal);
-    regista_cliente(lista_principal, nome, cc);
-    printf("Cliente inserido com sucesso!\n");
+    regista_utilizador(lista_principal, nome, cc);
+    printf("Utilizador inserido com sucesso!\n");
 }
 
 Viagem* escolhe_viagem(Lista_viagens lista_viagens){
@@ -435,7 +435,7 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
             lv_sec->next=node_v;
 
             lvgm_aux->viagem->vagas=(lvgm_aux->viagem->vagas)-1;
-            printf("Compra bem sucedida. Cliente colocado na lista de reservas.\n");
+            printf("Compra bem sucedida. Utilizador colocado na lista de reservas.\n");
         }
         else{
             printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
@@ -451,7 +451,7 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
                     while(lv_sec->next != NULL)
                         lv_sec=lv_sec->next;
                     lv_sec->next=node_v;
-                    printf("Compra bem sucedida. Cliente colocado na lista de espera.\n");
+                    printf("Compra bem sucedida. Utilizador colocado na lista de espera.\n");
                 }
                 else if(opcao!=2)
                     printf("Opção inexistente. Escolha de novo: ");
@@ -537,8 +537,10 @@ void viagens_utilizador(Lista_utilizadores lista_principal_utilizadores){
         aux_u=aux_u->next;
 
     lv_sec=aux_u->vgm_registado;
-    if(lv_sec->next==NULL)
-        printf("Este cliente ainda não adquiriu nenhuma viagem.\n");
+    if(lv_sec->next==NULL){
+        printf("O utilizador %s ainda não adquiriu nenhuma viagem.\n", utilizador->nome);
+        return;
+    }
 
     printf("Lista de viagens do utilizador %s:\n", utilizador->nome);
     while(lv_sec->next!=NULL){
@@ -556,7 +558,7 @@ void todos_com_viagem(Lista_utilizadores lista_utilizadores){
     aux_u=lista_utilizadores->next;
 
     if(aux_u==NULL){
-        printf("Não existe nenhum cliente na base de dados.\n");
+        printf("Não existe nenhum utilizador na base de dados.\n");
         return;
     }
 
@@ -571,6 +573,6 @@ void todos_com_viagem(Lista_utilizadores lista_utilizadores){
     }
 
     if(flag==0)
-        printf("Não existe nenhum cliente com viagens registadas.\n");
+        printf("Não existe nenhum utilizador com viagens registadas.\n");
 }
 

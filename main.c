@@ -66,7 +66,7 @@ int main(){
 
     menu(lista_principal_viagens, lista_principal_utilizadores);
     guarda_listas(lista_principal_viagens, lista_principal_utilizadores);
-
+    limpa_alocacoes();
 
     return 0;
 }

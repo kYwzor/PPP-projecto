@@ -31,7 +31,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 4:
-
+                cancela_compra(lista_principal_utilizadores, lista_principal_viagens);
                 break;
             case 5:
                 viagens_destino(lista_principal_viagens);

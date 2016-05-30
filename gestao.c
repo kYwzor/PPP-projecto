@@ -598,9 +598,11 @@ void cancela_compra(Lista_utilizadores lista_principal_utilizadores, Lista_viage
         lu_sec_aux=lu_sec->next;
         lu_sec->next=lu_sec_aux->next;
         free(lu_sec_aux);                                   /*libertada node da lista de utilizadores registados*/
+        printf("Reserva cancelada.\n");
 
         if(node_v->ut_espera->next == NULL){                /*se não houver ninguém na lista de espera*/
             node_v->viagem->vagas++;
+            printf("Libertada uma vaga para a viagem.\n");
             return;
         }
 
@@ -631,6 +633,7 @@ void cancela_compra(Lista_utilizadores lista_principal_utilizadores, Lista_viage
             lv_sec=lv_sec->next;
 
         lv_sec->next=lv_sec_aux;                                        /*node da viagem posta no final da lista de registados*/
+        printf("Utilizador %s movido da lista de espera para a lista de reservas.\n", aux_u->nome);
     }
 
     else{
@@ -658,5 +661,6 @@ void cancela_compra(Lista_utilizadores lista_principal_utilizadores, Lista_viage
         lu_sec_aux=lu_sec->next;
         lu_sec->next=lu_sec_aux->next;
         free(lu_sec_aux);                                               /*libertada node da lista de utilizadores registados*/
+        printf("Utilizador retirado da lista de espera.\n");
     }
 }

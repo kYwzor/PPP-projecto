@@ -8,7 +8,7 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
         printf("[1] Registar uma viagem\n");
         printf("[2] Registar um utilizador\n");
         printf("[3] Compra viagem para o utilizador\n");
-        printf("[4] Cancelar viagem de um utilizador\n");
+        printf("[4] Cancelar compra de um utilizador\n");
         printf("[5] Listar viagens para um destino\n");
         printf("[6] Listar viagens de um utilizador\n");
         printf("[7] Listar todos os utilizadores com viagens compradas\n");

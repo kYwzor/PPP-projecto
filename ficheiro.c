@@ -122,6 +122,8 @@ void carrega_listas(Lista_viagens lista_principal_viagens, Lista_utilizadores li
     ficheiro=fopen("viagens.txt", "r");
     while(fgets(linha, MAX_STRING, ficheiro)!=NULL){
         data_partida=(Data*) malloc(sizeof(Data));
+        if(data_partida==NULL)
+            printf("Erro na alocação de memória.\n");
 
         strncpy(copia, linha, 4);
         copia[4]='\0';

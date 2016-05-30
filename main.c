@@ -11,8 +11,9 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
         printf("[4] Cancelar compra de um utilizador\n");
         printf("[5] Listar viagens para um destino\n");
         printf("[6] Listar viagens de um utilizador\n");
-        printf("[7] Listar todos os utilizadores com viagens compradas\n");
-        printf("[8] Sair do programa\n\n");
+        printf("[7] Listar utilizadores de uma viagem\n");
+        printf("[8] Listar todos os utilizadores com viagens compradas\n");
+        printf("[9] Sair do programa\n\n");
 
         opcao=devolve_inteiro();
 
@@ -40,9 +41,12 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
                 viagens_utilizador(lista_principal_utilizadores);
                 break;
             case 7:
-                todos_com_viagem(lista_principal_utilizadores);
+                utilizadores_viagem(lista_principal_viagens);
                 break;
             case 8:
+                todos_com_viagem(lista_principal_utilizadores);
+                break;
+            case 9:
                 return;
                 break;
             default:

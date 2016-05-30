@@ -41,26 +41,27 @@ int verifica_data(int dia, int mes, int ano){
 
 char* devolve_nome(){
     char *nome;
+    char recebe[MAX_STRING];
     int contador, i, invalido;
-
-    nome=(char*) malloc(MAX_STRING*sizeof(char));
 
     do{
         i=0;
         contador=0;
         invalido=0;
-        fgets(nome, MAX_STRING, stdin);
-        retira_enter(nome);
-        while(nome[i] != '\0'){
-             if((nome[i]>='A' && nome[i]<='Z') || (nome[i]>='a' && nome[i]<='z') || (nome[i]>='À' && nome[i]<='Ö') || (nome[i]>='Ø' && nome[i]<='ö') || (nome[i]>='ø' && nome[i]<='ÿ') || nome[i] == ' ' || nome[i] == '-')
+        fgets(recebe, MAX_STRING, stdin);
+        retira_enter(recebe);
+        while(recebe[i] != '\0'){
+            if((recebe[i]>='A' && recebe[i]<='Z') || (recebe[i]>='a' && recebe[i]<='z') || recebe[i] == ' ')
                 contador++;
             i++;
         }
-        if(nome[0] == ' ' || nome[0] == '\0' || nome[strlen(nome)-1] == ' ' || contador != i){
+        if(recebe[0] == ' ' || recebe[0] == '\0' || recebe[strlen(recebe)-1] == ' ' || contador != i){
             printf("Nome inválido. Insira de novo: ");
             invalido=1;
         }
     }while(invalido==1);
+
+    nome=strdup(recebe);
 
     return nome;
 }
@@ -517,7 +518,9 @@ void viagens_utilizador(Lista_utilizadores lista_principal_utilizadores){
             printf("Opção inexistente. Escolha outra vez: ");
         }
     }while(invalido==1);
+
     printf("\n");
+
     if(opcao==1){
         lv_sec=aux_u->vgm_registado;
         if(lv_sec->next==NULL){
@@ -568,6 +571,89 @@ void viagens_utilizador(Lista_utilizadores lista_principal_utilizadores){
             while(lv_sec->next!=NULL){
                 lv_sec=lv_sec->next;
                 imprime_viagem(lv_sec->viagem);
+            }
+        }
+    }
+    printf("\n");
+}
+
+void utilizadores_viagem(Lista_viagens lista_principal_viagens){
+    Viagem *viagem;
+    Lista_viagens aux_v;
+    Lista_utilizadores lu_sec;
+    int opcao, invalido;
+
+    aux_v=lista_principal_viagens;
+    viagem=escolhe_viagem(aux_v);
+    if(viagem==NULL){
+        return;
+    }
+    while(viagem != aux_v->viagem)
+        aux_v=aux_v->next;
+
+    system("cls");
+    printf("Escolha que utilizadores da viagem quer listar\n[1] Utilizadores com reserva\n[2] Utilizadores em espera\n[3] Todos os utilizadores\n\nEscolha a opção: ");
+    do{
+        invalido=0;
+        opcao=devolve_inteiro();
+        if(opcao<1 || opcao>3){
+            invalido=1;
+            printf("Opção inexistente. Escolha outra vez: ");
+        }
+    }while(invalido==1);
+
+    printf("\n");
+
+    if(opcao==1){
+        lu_sec=aux_v->ut_registado;
+        if(lu_sec->next==NULL){
+            printf("Não existem utilizadores com reserva.\n\n");
+            return;
+        }
+
+        printf("Lista de utilizadores com reserva:\n");
+        while(lu_sec->next!=NULL){
+            lu_sec=lu_sec->next;
+            imprime_utilizador(lu_sec->utilizador);
+        }
+    }
+    else if(opcao==2){
+        lu_sec=aux_v->ut_espera;
+        if(lu_sec->next==NULL){
+            printf("Não existem utilizadores em espera.\n\n");
+            return;
+        }
+
+        printf("Lista de utilizadores em espera:\n");
+        while(lu_sec->next!=NULL){
+            lu_sec=lu_sec->next;
+            imprime_utilizador(lu_sec->utilizador);
+        }
+    }
+    else{
+        lu_sec=aux_v->ut_registado;
+        if(lu_sec->next==NULL)
+            printf("Não existem utilizadores com reserva.\n");
+
+        else{
+            printf("Lista de utilizadores com reserva:\n");
+            while(lu_sec->next!=NULL){
+                lu_sec=lu_sec->next;
+                imprime_utilizador(lu_sec->utilizador);
+            }
+            lu_sec=aux_v->ut_espera;
+        }
+
+        printf("\n");
+
+        if(lu_sec->next==NULL)
+            printf("Não existem utilizadores em espera.\n");
+
+        else{
+            printf("Lista de utilizadores em espera:\n");
+            while(lu_sec->next!=NULL){
+                lu_sec=lu_sec->next;
+                imprime_utilizador(lu_sec->utilizador);
             }
         }
     }

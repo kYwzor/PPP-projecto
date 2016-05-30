@@ -21,15 +21,12 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
         switch(opcao){
             case 1:
                 regista_viagem_manual(lista_principal_viagens);
-                /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 2:
                 regista_utilizador_manual(lista_principal_utilizadores);
-                /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 3:
                 compra_viagem(lista_principal_utilizadores, lista_principal_viagens);
-                /*lista_para_ficheiro(lista_principal,"listas.txt");*/
                 break;
             case 4:
                 cancela_compra(lista_principal_utilizadores, lista_principal_viagens);
@@ -62,13 +59,17 @@ void menu(Lista_viagens lista_principal_viagens, Lista_utilizadores lista_princi
 int main(){
     Lista_viagens lista_principal_viagens;
     Lista_utilizadores lista_principal_utilizadores;
+
     lista_principal_viagens = cria_lista_viagens();
     lista_principal_utilizadores = cria_lista_utilizadores();
+
     verifica_ficheiros();
     carrega_listas(lista_principal_viagens, lista_principal_utilizadores);
+
     setlocale(LC_ALL, "Portuguese");
 
     menu(lista_principal_viagens, lista_principal_utilizadores);
+
     guarda_listas(lista_principal_viagens, lista_principal_utilizadores);
     limpa_alocacoes();
 

@@ -274,13 +274,13 @@ Viagem* escolhe_viagem(Lista_viagens lista_viagens){
             imprime_viagem(aux->viagem);
         }
     }
+    printf("\nEscolha a opção: ");
     do{
         invalido=0;
-        printf("Escolha a opção: ");
         opcao=devolve_inteiro();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inexistente. Escolha outra vez.\n");
+            printf("Opção inexistente. Escolha outra vez: ");
         }
     }while(invalido==1);
 
@@ -312,13 +312,13 @@ Utilizador* escolhe_utilizador(Lista_utilizadores lista_utilizadores){
             imprime_utilizador(aux->utilizador);
         }
     }
+    printf("\nEscolha a opção: ");
     do{
         invalido=0;
-        printf("Escolha a opção: ");
         opcao=devolve_inteiro();
         if(opcao<1 || opcao>i){
             invalido=1;
-            printf("Opção inexistente. Escolha outra vez.\n");
+            printf("Opção inexistente. Escolha outra vez: ");
         }
     }while(invalido==1);
 
@@ -398,9 +398,9 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
     lut_aux=lista_utilizadores->next;
     lvgm_aux=lista_viagens->next;
 
-    while(aux_u != lut_aux->utilizador && lut_aux->next!=NULL)
+    while(aux_u != lut_aux->utilizador)
         lut_aux=lut_aux->next;
-    while(aux_v != lvgm_aux->viagem && lvgm_aux->next!=NULL)
+    while(aux_v != lvgm_aux->viagem)
         lvgm_aux=lvgm_aux->next;
 
     aux_int=procura_viagem_de_utilizador(lut_aux, aux_v);
@@ -547,3 +547,116 @@ void todos_com_viagem(Lista_utilizadores lista_utilizadores){
         printf("Não existe nenhum utilizador com viagens registadas.\n");
 }
 
+void cancela_compra(Lista_utilizadores lista_principal_utilizadores, Lista_viagens lista_principal_viagens){
+    Lista_utilizadores node_u, lu_sec, lu_sec_aux;
+    Lista_viagens node_v, lv_sec, lv_sec_aux;
+    Utilizador *aux_u;
+    Viagem *aux_v;
+    int opcao, invalido;
+
+    aux_u=escolhe_utilizador(lista_principal_utilizadores);
+    if(aux_u==NULL)
+        return;
+
+    node_u=lista_principal_utilizadores->next;
+    while(node_u->utilizador!=aux_u)
+        node_u=node_u->next;
+
+    system("cls");
+    printf("Escolha o tipo de compra que deseja cancelar\n[1] Viagem reservada\n[2] Viagem na lista de espera\n\nEscolha a opção: ");
+    do{
+        invalido=0;
+        opcao=devolve_inteiro();
+        if(opcao!=1 && opcao!=2){
+            invalido=1;
+            printf("Opção inexistente. Escolha outra vez: ");
+        }
+    }while(invalido==1);
+
+
+    if(opcao==1){
+        aux_v=escolhe_viagem(node_u->vgm_registado);
+        if(aux_v==NULL)
+            return;
+
+        lv_sec=node_u->vgm_registado;
+        while(lv_sec->next->viagem != aux_v)
+            lv_sec=lv_sec->next;
+
+        lv_sec_aux=lv_sec->next;
+        lv_sec->next=lv_sec_aux->next;
+        free(lv_sec_aux);                                       /*libertada node da lista de viagens registadas*/
+
+        node_v=lista_principal_viagens->next;
+        while(node_v->viagem != aux_v)
+            node_v=node_v->next;
+
+        lu_sec=node_v->ut_registado;
+        while(lu_sec->next->utilizador != aux_u)
+            lu_sec=lu_sec->next;
+
+        lu_sec_aux=lu_sec->next;
+        lu_sec->next=lu_sec_aux->next;
+        free(lu_sec_aux);                                   /*libertada node da lista de utilizadores registados*/
+
+        if(node_v->ut_espera->next == NULL){                /*se não houver ninguém na lista de espera*/
+            node_v->viagem->vagas++;
+            return;
+        }
+
+
+        while(lu_sec->next != NULL)
+            lu_sec=lu_sec->next;
+
+        lu_sec_aux=node_v->ut_espera->next;                             /*primeiro elemento da lista de espera*/
+        lu_sec->next=lu_sec_aux;                                        /*ultimo elemento da lista de reservados é o primeiro da lista de espera*/
+        (node_v->ut_espera)->next=lu_sec_aux->next;                     /*liga header ao segundo elemento em espera*/
+        lu_sec_aux->next=NULL;                                          /*next do ultimo elemento em reserva é NULL*/
+
+        aux_u=lu_sec_aux->utilizador;
+        node_u=lista_principal_utilizadores->next;
+        while(node_u->utilizador!=aux_u)
+            node_u=node_u->next;
+
+        lv_sec=node_u->vgm_espera;
+        while(lv_sec->next->viagem != aux_v)
+            lv_sec=lv_sec->next;
+
+        lv_sec_aux=lv_sec->next;                                        /*lv_sec_aux é a node em que está a viagem*/
+        lv_sec->next=lv_sec_aux->next;                                  /*anterior a node da viagem passa a apontar para o que esta a seguir a viagem*/
+        lv_sec_aux->next=NULL;                                          /*node da viagem aponta para NULL pois vai ser o final da outra lista*/
+
+        lv_sec=node_u->vgm_registado;
+        while(lv_sec->next != NULL)
+            lv_sec=lv_sec->next;
+
+        lv_sec->next=lv_sec_aux;                                        /*node da viagem posta no final da lista de registados*/
+    }
+
+    else{
+        aux_v=escolhe_viagem(node_u->vgm_espera);
+        if(aux_v==NULL)
+            return;
+
+        lv_sec=node_u->vgm_espera;
+        while(lv_sec->next->viagem != aux_v)
+            lv_sec=lv_sec->next;
+
+        lv_sec_aux=lv_sec->next;
+        lv_sec->next=lv_sec_aux->next;
+        free(lv_sec_aux);                                               /*libertada node da lista de viagens espera*/
+
+
+        node_v=lista_principal_viagens->next;
+        while(node_v->viagem != aux_v)
+            node_v=node_v->next;
+
+        lu_sec=node_v->ut_espera;
+        while(lu_sec->next->utilizador != aux_u)
+            lu_sec=lu_sec->next;
+
+        lu_sec_aux=lu_sec->next;
+        lu_sec->next=lu_sec_aux->next;
+        free(lu_sec_aux);                                               /*libertada node da lista de utilizadores registados*/
+    }
+}

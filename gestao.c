@@ -434,7 +434,7 @@ void compra_viagem(Lista_utilizadores lista_utilizadores, Lista_viagens lista_vi
             printf("Compra bem sucedida. Utilizador colocado na lista de reservas.\n");
         }
         else{
-            printf("Não existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n");
+            printf("\nNão existem vagas disponíveis:\n[1] Colocar na lista de espera\n[2] Voltar ao menu\n\nEscolha a opção: ");
             do{
                 opcao=devolve_inteiro();
                 if(opcao==1){
@@ -497,27 +497,81 @@ void viagens_utilizador(Lista_utilizadores lista_principal_utilizadores){
     Utilizador *utilizador;
     Lista_viagens lv_sec;
     Lista_utilizadores aux_u;
+    int opcao, invalido;
 
     aux_u=lista_principal_utilizadores;
     utilizador=escolhe_utilizador(aux_u);
     if(utilizador==NULL){
         return;
     }
-    system("cls");
     while(utilizador != aux_u->utilizador)
         aux_u=aux_u->next;
 
-    lv_sec=aux_u->vgm_registado;
-    if(lv_sec->next==NULL){
-        printf("O utilizador %s ainda não adquiriu nenhuma viagem.\n", utilizador->nome);
-        return;
-    }
+    system("cls");
+    printf("Escolha que viagens de %s quer listar\n[1] Viagens reservadas\n[2] Viagens em espera\n[3] Todas as viagens\n\nEscolha a opção: ", utilizador->nome);
+    do{
+        invalido=0;
+        opcao=devolve_inteiro();
+        if(opcao<1 || opcao>3){
+            invalido=1;
+            printf("Opção inexistente. Escolha outra vez: ");
+        }
+    }while(invalido==1);
+    printf("\n");
+    if(opcao==1){
+        lv_sec=aux_u->vgm_registado;
+        if(lv_sec->next==NULL){
+            printf("%s não tem nenhuma viagem reservada.\n\n", utilizador->nome);
+            return;
+        }
 
-    printf("Lista de viagens do utilizador %s:\n", utilizador->nome);
-    while(lv_sec->next!=NULL){
-        lv_sec=lv_sec->next;
-        imprime_viagem(lv_sec->viagem);
+        printf("Lista de viagens reservadas de %s:\n", utilizador->nome);
+        while(lv_sec->next!=NULL){
+            lv_sec=lv_sec->next;
+            imprime_viagem(lv_sec->viagem);
+        }
     }
+    else if(opcao==2){
+        lv_sec=aux_u->vgm_espera;
+        if(lv_sec->next==NULL){
+            printf("%s não tem nenhuma viagem em espera.\n\n", utilizador->nome);
+            return;
+        }
+
+        printf("Lista de viagens em espera de %s:\n", utilizador->nome);
+        while(lv_sec->next!=NULL){
+            lv_sec=lv_sec->next;
+            imprime_viagem(lv_sec->viagem);
+        }
+    }
+    else{
+        lv_sec=aux_u->vgm_registado;
+        if(lv_sec->next==NULL)
+            printf("%s não tem nenhuma viagem reservada.\n", utilizador->nome);
+
+        else{
+            printf("Lista de viagens reservadas de %s:\n", utilizador->nome);
+            while(lv_sec->next!=NULL){
+                lv_sec=lv_sec->next;
+                imprime_viagem(lv_sec->viagem);
+            }
+            lv_sec=aux_u->vgm_espera;
+        }
+
+        printf("\n");
+
+        if(lv_sec->next==NULL)
+            printf("%s não tem nenhuma viagem em espera.\n", utilizador->nome);
+
+        else{
+            printf("Lista de viagens em espera de %s:\n", utilizador->nome);
+            while(lv_sec->next!=NULL){
+                lv_sec=lv_sec->next;
+                imprime_viagem(lv_sec->viagem);
+            }
+        }
+    }
+    printf("\n");
 }
 
 void todos_com_viagem(Lista_utilizadores lista_utilizadores){

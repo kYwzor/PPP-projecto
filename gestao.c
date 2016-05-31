@@ -31,6 +31,24 @@ void insere_lista_principal_viagens (Lista_viagens lista, Viagem *viagem){
     }
 }
 
+void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Utilizador *utilizador){
+    Lista_utilizadores lu_aux, no;
+    Lista_viagens reg, esp;
+    no = cria_lista_utilizadores();
+    reg = cria_lista_viagens();
+    esp = cria_lista_viagens();
+
+    no->vgm_registado=reg;
+    no->vgm_espera=esp;
+    no->utilizador=utilizador;
+
+    lu_aux=lista_principal;
+    while(lu_aux->next!=NULL){
+        lu_aux=lu_aux->next;
+    }
+    lu_aux->next=no;
+}
+
 void regista_viagem(Lista_viagens lista_principal, char* destino, Data* data_partida, int vagas){
     Viagem* viagem;
 
@@ -91,23 +109,7 @@ void regista_viagem_manual(Lista_viagens lista_principal){
     printf("Viagem inserida com sucesso!\n");
 }
 
-void insere_lista_principal_utilizadores(Lista_utilizadores lista_principal, Utilizador *utilizador){
-    Lista_utilizadores lu_aux, no;
-    Lista_viagens reg, esp;
-    no = cria_lista_utilizadores();
-    reg = cria_lista_viagens();
-    esp = cria_lista_viagens();
 
-    no->vgm_registado=reg;
-    no->vgm_espera=esp;
-    no->utilizador=utilizador;
-
-    lu_aux=lista_principal;
-    while(lu_aux->next!=NULL){
-        lu_aux=lu_aux->next;
-    }
-    lu_aux->next=no;
-}
 
 void regista_utilizador(Lista_utilizadores lista_principal, char *nome, int cc){
     Utilizador *utilizador;
